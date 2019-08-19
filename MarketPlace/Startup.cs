@@ -26,6 +26,7 @@ namespace MarketPlace
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
+
             });
         }
 
