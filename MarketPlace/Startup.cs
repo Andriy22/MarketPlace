@@ -1,10 +1,17 @@
+using MarketPlace.Entities.DBEntities;
+using MarketPlace.JWT;
+using MarketPlace.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
 
 namespace MarketPlace
 {
@@ -20,6 +27,64 @@ namespace MarketPlace
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddDbContext<DBContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MarketPlace")));
+            services.AddDefaultIdentity<User>()
+                   .AddRoles<IdentityRole>()
+                   .AddEntityFrameworkStores<DBContext>();
+
+            var builder = services.AddIdentityCore<User>(o =>
+            {
+                // configure identity options
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 6;
+            });
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            builder.AddEntityFrameworkStores<DBContext>().AddDefaultTokenProviders();
+
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                  .AddJwtBearer(options =>
+                  {
+                      options.RequireHttpsMetadata = false;
+                      options.TokenValidationParameters = new TokenValidationParameters
+                      {
+                           // укзывает, будет ли валидироваться издатель при валидации токена
+                           ValidateIssuer = true,
+                           // строка, представляющая издателя
+                           ValidIssuer = AuthOptions.ISSUER,
+
+                           // будет ли валидироваться потребитель токена
+                           ValidateAudience = true,
+                           // установка потребителя токена
+                           ValidAudience = AuthOptions.AUDIENCE,
+                           // будет ли валидироваться время существования
+                           ValidateLifetime = true,
+
+                           // установка ключа безопасности
+                           IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                           // валидация ключа безопасности
+                           ValidateIssuerSigningKey = true,
+                      };
+                  });
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    b =>
+                    {
+                        b
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
             // In production, the Angular files will be served from this directory
@@ -45,8 +110,11 @@ namespace MarketPlace
             }
 
             app.UseHttpsRedirection();
+            app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
+
+            app.UseAuthentication();
+            app.UseCors("AllowAll");
 
             app.UseMvc(routes =>
             {
