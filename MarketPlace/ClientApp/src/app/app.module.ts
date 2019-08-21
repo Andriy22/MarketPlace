@@ -10,7 +10,16 @@ import {RouterModule} from '@angular/router';
 import { registerLocaleData } from '@angular/common';
 import en from '@angular/common/locales/en';
 import {DefaultModule} from './modules/default/default.module';
-
+import { NzButtonModule } from 'ng-zorro-antd/button';
+import { NzLayoutModule } from 'ng-zorro-antd/layout';
+import { CommonModule } from '@angular/common';
+import { NzSliderModule } from 'ng-zorro-antd/slider';
+import { NzMenuModule } from 'ng-zorro-antd/menu';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzBreadCrumbModule } from 'ng-zorro-antd/breadcrumb';
+import { NzDropDownModule } from 'ng-zorro-antd/dropdown';
+import { NzGridModule } from 'ng-zorro-antd/grid';
+import { UserLayoutModule } from './modules/user-layout/user-layout.module';
 registerLocaleData(en);
 
 @NgModule({
@@ -27,6 +36,16 @@ registerLocaleData(en);
     HttpClientModule,
     BrowserAnimationsModule,
     DefaultModule,
+    UserLayoutModule,
+    NzGridModule,
+    NzDropDownModule,
+    NzBreadCrumbModule,
+    NzAvatarModule,
+    NzMenuModule,
+    NzSliderModule,
+    CommonModule,
+    NzLayoutModule,
+    NzButtonModule
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]
