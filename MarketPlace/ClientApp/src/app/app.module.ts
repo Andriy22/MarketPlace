@@ -8,6 +8,13 @@ import {LayoutModule} from './modules/layout/layout.module';
 import {MatIconModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
 import {MatButtonModule} from '@angular/material';
 import {FlexLayoutModule} from '@angular/flex-layout';
+import { NgZorroAntdModule, NZ_I18N, en_US } from 'ng-zorro-antd';
+import { FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { registerLocaleData } from '@angular/common';
+import en from '@angular/common/locales/en';
+
+registerLocaleData(en);
 @NgModule({
   declarations: [
     AppComponent
@@ -22,8 +29,11 @@ import {FlexLayoutModule} from '@angular/flex-layout';
     MatButtonModule,
     MatSidenavModule,
     FlexLayoutModule,
+    NgZorroAntdModule,
+    FormsModule,
+    HttpClientModule,
   ],
-  providers: [],
+  providers: [{ provide: NZ_I18N, useValue: en_US }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
