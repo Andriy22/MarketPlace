@@ -1,14 +1,28 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { NarbarComponent } from './components/narbar/narbar.component';
 import { NavbarComponent } from './components/navbar/navbar.component';
-
+import {RouterModule} from '@angular/router';
+import {MatButtonModule, MatIconModule, MatSidenavModule, MatToolbarModule} from '@angular/material';
+import {FlexLayoutModule} from '@angular/flex-layout';
 
 
 @NgModule({
-  declarations: [NarbarComponent, NavbarComponent],
+  declarations: [
+    NavbarComponent,
+
+  ],
+  exports: [
+    NavbarComponent
+  ],
   imports: [
-    CommonModule
+    CommonModule,
+    RouterModule,
+    MatButtonModule,
+    MatSidenavModule,
+    MatToolbarModule,
+    MatIconModule,
+    FlexLayoutModule,
+
   ]
 })
 export class LayoutModule { }
