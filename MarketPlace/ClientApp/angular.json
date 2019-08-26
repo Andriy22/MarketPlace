@@ -52,6 +52,7 @@
               }
             ],
             "styles": [
+              "src/grid.css",
               "./node_modules/ng-zorro-antd/ng-zorro-antd.min.css",
               "./node_modules/@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss"

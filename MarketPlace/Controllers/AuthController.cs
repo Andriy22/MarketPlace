@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
+using System.Threading;
 using System.Threading.Tasks;
 using MarketPlace.Entities.DBEntities;
 using MarketPlace.Helpers;
@@ -72,7 +73,7 @@ namespace MarketPlace.Controllers
         [HttpPost("/Auth")]
         public IActionResult Auth(AuthViewModel model)
         {
-            //Thread.Sleep(1000);
+            Thread.Sleep(2000);
             var identity = GetIdentity(model.Email, model.Password);
             if (identity == null)
             {

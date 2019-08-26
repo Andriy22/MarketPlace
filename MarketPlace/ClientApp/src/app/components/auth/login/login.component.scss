@@ -1,10 +1,28 @@
-.footer {
-  position: absolute;
-  bottom: 0px;
-  width: 100%;
-  border-top: 1px solid rgb(232, 232, 232);
-  padding: 10px 16px;
-  text-align: right;
-  left: 0px;
-  background: #fff;
+:host {
+  display: flex;
+  margin: 100px 0px;
+}
+
+.mat-form-field {
+  font-size: 24px;
+}
+
+mat-card-title{
+  text-align: center;
+  font-size: 30px;
+}
+.error {
+  padding: 16px;
+  color: white;
+  background-color: darkred;
+  text-align: center;
+  font-size: 28px;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+}
+button{
+  font-size: 28px;
 }

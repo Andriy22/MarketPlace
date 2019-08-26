@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MarketPlace.Entities.DBEntities;
 using MarketPlace.Helpers;
@@ -29,6 +30,7 @@ namespace MarketPlace.Controllers
         {
             try
             {
+                Thread.Sleep(2000);
                 if (ViewModelsValidator.isValid(model))
                 {
                     foreach (var el in _context.Users)
