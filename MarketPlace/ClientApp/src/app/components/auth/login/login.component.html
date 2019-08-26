@@ -4,17 +4,22 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <p>
         <mat-form-field class="ant-col-24">
-          <label>
             <input type="text" matInput placeholder="Username" formControlName="email">
-          </label>
+            <mat-error *ngIf="loginForm.get('email').hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="loginForm.get('email').hasError('email')">
+              Email is <strong>invalid</strong>
+            </mat-error>
         </mat-form-field>
       </p>
 
       <p>
         <mat-form-field class="ant-col-24">
-          <label>
             <input type="password" matInput placeholder="Password" formControlName="password">
-          </label>
+            <mat-error *ngIf="loginForm.get('password').hasError('required')">
+              Password is <strong>required</strong>
+            </mat-error>
         </mat-form-field>
       </p>
       <div *ngIf="error" class="error ant-col-24">

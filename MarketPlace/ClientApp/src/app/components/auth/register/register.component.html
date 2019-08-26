@@ -4,23 +4,29 @@
     <form [formGroup]="RegisterForm" (ngSubmit)="onSubmit()">
       <p>
         <mat-form-field class="ant-col-24">
-          <label>
             <input type="text" matInput placeholder="Email" formControlName="email">
-          </label>
+            <mat-error *ngIf="RegisterForm.get('email').hasError('email')">
+              Email is <strong>invalid!</strong>
+            </mat-error>
+            <mat-error *ngIf="RegisterForm.get('email').hasError('required')">
+              Email is <strong>required</strong>
+            </mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="ant-col-24">
-          <label>
             <input type="text" matInput placeholder="UserName" formControlName="username">
-          </label>
+            <mat-error *ngIf="RegisterForm.get('username').hasError('required')">
+              Username is <strong>required</strong>
+            </mat-error>
         </mat-form-field>
       </p>
       <p>
         <mat-form-field class="ant-col-24">
-          <label>
             <input type="password" matInput placeholder="Password" formControlName="password">
-          </label>
+            <mat-error *ngIf="RegisterForm.get('username').hasError('required')">
+              password is <strong>required</strong>
+            </mat-error>
         </mat-form-field>
       </p>
       <div *ngIf="error" class="error ant-col-24">
@@ -28,7 +34,7 @@
       </div>
       <br>
       <div class="button ant-col-24">
-        <button type="submit"  color="primary" mat-raised-button mat-button>Register</button>
+        <button [disabled]="!this.RegisterForm.valid" type="submit"  color="primary" mat-raised-button mat-button>Register</button>
       </div>
 
     </form>
