@@ -20,12 +20,23 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import {ErrorInterceptor} from './shared/helpers/error.interceptor';
 import {JwtInterceptor} from './shared/helpers/jwt.interceptor';
 import {NgxSpinnerModule} from 'ngx-spinner';
+import { Routes } from '@angular/router';
+
+
 registerLocaleData(en);
+
+// const appRoutes: Routes =[
+// { path : '', redirectTo: 'index', pathMatch: 'full'},
+// { path : 'trades', component: TradesComponent}
+// ];
+
 @NgModule({
   declarations: [
     AppComponent,
     LoginComponent,
-    RegisterComponent
+    RegisterComponent,
+  
+  
   ],
   imports: [
     NzButtonModule,
@@ -47,6 +58,7 @@ registerLocaleData(en);
     ReactiveFormsModule,
     MatInputModule,
     NgxSpinnerModule,
+    
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

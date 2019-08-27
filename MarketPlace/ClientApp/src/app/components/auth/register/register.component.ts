@@ -32,8 +32,11 @@ export class RegisterComponent implements OnInit {
     this.RegisterForm = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
       username: ['', [Validators.required]],
-      password: ['', [Validators.required]]
-    });
+      password: ['', [Validators.required]],
+      confirmPassword: ['', Validators.required]
+    },
+      { validator: this.checkPasswords }
+    );
   }
 
   onSubmit() {
@@ -51,6 +54,16 @@ export class RegisterComponent implements OnInit {
         error,
       );
     });
+  }
+  checkPasswords(group: FormGroup) {
+    const pass = group.controls.password.value;
+    const confirmPass = group.controls.confirmPassword.value;
+
+    if (pass === confirmPass) {
+      return null;
+    } else {
+      group.controls.confirmPassword.setErrors({ MatchPassword: true });
+    }
   }
 
 }

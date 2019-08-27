@@ -9,6 +9,9 @@
     <a mat-button class="companyName" routerLink="/">
       <span>MarketPlace {{this.AuthService.isAuth | async}}</span>
     </a>
+    <a mat-button routerLink="/Trades">
+      <span>Trades</span>
+    </a>
     <span class="example-spacer"></span>
     <div fxShow="true" fxHide.lt-md="true">
       <a mat-button routerLink="/login">Sign In</a>

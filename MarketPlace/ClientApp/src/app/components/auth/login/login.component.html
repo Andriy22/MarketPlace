@@ -4,7 +4,7 @@
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
       <p>
         <mat-form-field class="ant-col-24">
-            <input type="text" matInput placeholder="Username" formControlName="email">
+            <input type="text" matInput placeholder="Emailng" formControlName="email">
             <mat-error *ngIf="loginForm.get('email').hasError('required')">
               Email is <strong>required</strong>
             </mat-error>
