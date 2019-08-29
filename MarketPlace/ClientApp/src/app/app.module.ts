@@ -21,7 +21,7 @@ import {ErrorInterceptor} from './shared/helpers/error.interceptor';
 import {JwtInterceptor} from './shared/helpers/jwt.interceptor';
 import {NgxSpinnerModule} from 'ngx-spinner';
 import { Routes } from '@angular/router';
-
+import {MatBadgeModule} from '@angular/material/badge';
 
 registerLocaleData(en);
 
@@ -35,8 +35,6 @@ registerLocaleData(en);
     AppComponent,
     LoginComponent,
     RegisterComponent,
-  
-  
   ],
   imports: [
     NzButtonModule,
@@ -58,7 +56,7 @@ registerLocaleData(en);
     ReactiveFormsModule,
     MatInputModule,
     NgxSpinnerModule,
-    
+    MatBadgeModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: en_US },
     { provide: HTTP_INTERCEPTORS, useClass: JwtInterceptor, multi: true },

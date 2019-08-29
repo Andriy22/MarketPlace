@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import {AuthenticationService} from './shared/services/authentication.service';
 
 @Component({
@@ -6,8 +6,16 @@ import {AuthenticationService} from './shared/services/authentication.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   title = 'ClientApp';
-  constructor(private  AuthService: AuthenticationService) {
+  isAuth = false;
+  constructor(protected  AuthService: AuthenticationService) {
+  }
+  ngOnInit() {
+    this.AuthService.isAuth.subscribe((x) => {
+      setTimeout(() => {
+        this.isAuth = x;
+      }, 0);
+    });
   }
 }

@@ -7,32 +7,75 @@
     </div>
 
     <a mat-button class="companyName" routerLink="/">
-      <span>MarketPlace {{this.AuthService.isAuth | async}}</span>
-    </a>
-    <a mat-button routerLink="/Trades">
-      <span>Trades</span>
+      <span>MarketPlace {{this.isAuth}}</span>
     </a>
     <span class="example-spacer"></span>
+
+
+
     <div fxShow="true" fxHide.lt-md="true">
-      <a mat-button routerLink="/login">Sign In</a>
-      <a mat-button routerLink="/register">Register</a>
-    </div>
+      <!-- No auth -->
+      <ng-container *ngIf="!this.isAuth; else ToolBarAuth">
+
+          <a mat-button routerLink="/login">Sign In</a>
+          <a mat-button routerLink="/register">Register</a>
+
+
+      </ng-container>
+  <!-- Auth -->
+      <ng-template #ToolBarAuth>
+          <a mat-button routerLink="/Trades">
+            <span>Profile</span>
+          </a>
+
+        <a mat-button routerLink="/sales">
+          <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My sales</span>
+        </a>
+        <a mat-button routerLink="/purchases">
+          <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My purchases</span>
+        </a>
+        <a mat-button routerLink="/login">
+          <span>Sign Out</span>
+        </a>
+      </ng-template>
+  </div>
   </mat-toolbar>
   <mat-sidenav-container fxFlexFill class="example-container">
 
     <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
       <div fxLayout="column">
-        <a mat-button routerLink="/login">Sign In</a>
-        <a mat-button routerLink="/register">Register</a>
+        <ng-container *ngIf="!this.isAuth; else SideBarAuth">
+            <a mat-button routerLink="/login">Sign In</a>
+            <a mat-button routerLink="/register">Register</a>
+        </ng-container>
+        <ng-template #SideBarAuth>
+            <a mat-button routerLink="/Trades">
+              <span>Profile</span>
+            </a>
+
+          <a mat-button routerLink="/sales">
+            <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My sales</span>
+          </a>
+          <a mat-button routerLink="/purchases">
+            <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My purchases</span>
+          </a>
+          <a mat-button routerLink="/login">
+            <span>Sign Out</span>
+          </a>
+        </ng-template>
+
 
       </div>
     </mat-sidenav>
     <mat-sidenav-content fxFlexFill>
-     <router-outlet></router-outlet>
+      <div class="container">
+          <router-outlet></router-outlet>
+      </div>
+
       <ngx-spinner
         bdOpacity = 0.5
         bdColor = "gray"
-        size = "medium"
+        size = "large"
         color = "white"
         type = "line-spin-clockwise-fade"
         [fullScreen] = "false"
