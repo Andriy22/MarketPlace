@@ -3,13 +3,10 @@ import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Game } from './../../../../shared/models/games';
+import { MarketService } from './../../../../shared/services/market.service';
+import { async } from 'q';
 
 
-/** Constants used to fill up our data base. */
-
-const Categories: string[] = [
-  'Accounts', 'Boost', 'Undefined'
-];
 
 @Component({
   selector: 'app-home',
@@ -18,27 +15,21 @@ const Categories: string[] = [
 })
 export class HomeComponent implements OnInit {
 
-  Games: Game[] = [];
   displayedColumns: string[] = ['game', 'categories'];
   dataSource: MatTableDataSource<Game>;
-
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
-  @ViewChild(MatSort, {static: true}) sort: MatSort;
+  constructor(private Ms: MarketService) {
+    this.Ms.Games.subscribe((x) => {
+     // console.log(x);
+      this.dataSource = new MatTableDataSource(x);
+    });
+    // console.log(this.Games);
 
-  constructor() {
-    // Create 100 users
-    // const users = Array.from({length: 100}, (_, k) => createNewUser(k + 1));
-    this.Games.push({id: '1', game: 'Dota', categories: Categories});
-    this.Games.push({id: '2', game: 'CSGO', categories: Categories});
-    this.Games.push({id: '3', game: 'WoW', categories: Categories});
-    // Assign the data to the data source for the table to render
-    this.dataSource = new MatTableDataSource(this.Games);
   }
 
   ngOnInit() {
 
     this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
   }
 
   applyFilter(filterValue: string) {

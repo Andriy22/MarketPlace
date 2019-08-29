@@ -7,19 +7,19 @@
   </mat-form-field>
 
   <div class="mat-elevation-z8">
-    <table mat-table [dataSource]="dataSource" matSort>
+    <table mat-table [dataSource]="dataSource">
 
 
       <!-- Name Column -->
       <ng-container matColumnDef="game">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Game </th>
+        <th mat-header-cell *matHeaderCellDef> Game </th>
         <td mat-cell *matCellDef="let row"> {{row.game}} </td>
       </ng-container>
 
       <!-- Color Column -->
       <ng-container matColumnDef="categories">
-        <th mat-header-cell *matHeaderCellDef mat-sort-header> Categories </th>
-        <td mat-cell *matCellDef="let row" [style.color]="row.categories"> <span id="item">{{row.categories}}</span> </td>
+        <th mat-header-cell *matHeaderCellDef> Categories </th>
+        <td mat-cell *matCellDef="let row" > <span class="item" *ngFor="let item of row.categories">{{item.name}} </span> </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

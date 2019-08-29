@@ -15,5 +15,8 @@ namespace MarketPlace.Models
         {
         }
         public new DbSet<User> Users { get; set; }
+        public DbSet<Lot> Lots { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<Game> Games { get; set; }
     }
 }
