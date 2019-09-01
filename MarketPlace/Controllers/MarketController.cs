@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using MarketPlace.Entities.DBEntities;
 using MarketPlace.Models;
@@ -31,7 +32,8 @@ namespace MarketPlace.Controllers
         [AllowAnonymous]
         public IActionResult getGames()
         {
-          
+
+            Thread.Sleep(2000);
             var games = new HashSet<AllGamesViewModel>();
             foreach(var el in this._context.Games.Include(x=>x.Categories)) {
                 var categories = new HashSet<CategoryViewModel>();
@@ -42,7 +44,7 @@ namespace MarketPlace.Controllers
             }
             return Ok(games);
 
-        }
+        } 
         
 
 
