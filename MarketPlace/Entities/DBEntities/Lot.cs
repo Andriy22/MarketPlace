@@ -11,5 +11,8 @@ namespace MarketPlace.Entities.DBEntities
         public string Name { get; set; }
         public string  Description { get; set; }
         public decimal Price { get; set; }
+        public DateTime lastUp { get; set; }
+        public virtual Category category { get; set; }
+        public virtual User Owner { get; set; }
     }
 }

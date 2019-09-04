@@ -11,7 +11,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-
 namespace MarketPlace.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -44,8 +43,62 @@ namespace MarketPlace.Controllers
             }
             return Ok(games);
 
-        } 
-        
+        }
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult getLots(int id)
+        {
+            Thread.Sleep(2000);
+            var lots = new HashSet<AllLots>();
+            foreach (var el in this._context.Lots.Include(x => x.category).Where(x => x.category.ID == id).ToList().OrderByDescending(x => x.lastUp))
+            {
+                lots.Add(new AllLots() { Id = el.ID, Name = el.Name, Price = el.Price });
+            }
+            return Ok(lots);
+        }
+
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult getMyLots(int id)
+        {
+            Thread.Sleep(2000);
+            var lots = new HashSet<AllLots>();
+            foreach (var el in this._context.Lots.Include(x => x.category).Include(x=>x.Owner).Where(x => x.category.ID == id && x.Owner.Id == User.Identity.Name).ToList().OrderByDescending(x => x.lastUp))
+            {
+                lots.Add(new AllLots() { Id = el.ID, Name = el.Name, Price = el.Price });
+            }
+            return Ok(lots);
+        }
+
+        [HttpPost]
+        [Authorize]
+        public IActionResult newLot(NewLotViewModel model)
+        {
+            var category = this._context.Categories.FirstOrDefault(x => x.ID == model.Category);
+            var user = _context.Users.First(x => x.Id == User.Identity.Name);
+            if (category == null && user == null)
+                return BadRequest(new { msg = "Category or User not found" });
+            this._context.Lots.Add(new Lot()
+            {
+                category = category,
+                Price = model.Price,
+                Name = model.Name,
+                Description = model.Description,
+                Owner = user,
+                lastUp = DateTime.Now
+            });
+
+            try
+            {
+                this._context.SaveChanges();
+                return Ok(new { msg = "added" });
+            } catch(Exception)
+            {
+                return BadRequest(new { msg = "Unknow error!" });
+            }
+         
+        }
 
 
     }

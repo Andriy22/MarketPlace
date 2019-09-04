@@ -1,0 +1,45 @@
+<mat-card class="ant-col-md-12 ant-col-md-offset-6 ant-col-24">
+  <mat-card-title>Add Lot</mat-card-title>
+  <mat-card-content>
+    <form [formGroup]="lotForm" (ngSubmit)="onSubmit()">
+      <p>
+        <mat-form-field class="ant-col-24">
+            <input type="text" matInput placeholder="Name" formControlName="name">
+            <mat-error *ngIf="lotForm.get('name').hasError('maxLength')">
+              Small description max length is <strong>64</strong>
+            </mat-error>
+            <mat-error *ngIf="lotForm.get('name').hasError('required')">
+              Small description is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="ant-col-24">
+            <input type="text" matInput placeholder="Description" formControlName="description">
+            <mat-error *ngIf="lotForm.get('description').hasError('required')">
+              Username is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field class="ant-col-24">
+            <input type="number" matInput placeholder="Price" formControlName="price">
+            <mat-error *ngIf="lotForm.get('price').hasError('required')">
+              Price is <strong>required</strong>
+            </mat-error>
+            <mat-error *ngIf="lotForm.get('price').hasError('min')">
+              Min price is <strong>10</strong>
+            </mat-error>
+        </mat-form-field>
+      </p>
+      <div *ngIf="error" class="error ant-col-24">
+        <p style="text-align: center; font-size: 16px" *ngIf="error"> {{ error }}</p>
+      </div>
+      <br>
+      <div class="button ant-col-24">
+        <button [disabled]="!this.lotForm.valid" type="submit"  color="primary" mat-raised-button mat-button>Create Lot</button>
+      </div>
+
+    </form>
+  </mat-card-content>
+</mat-card>

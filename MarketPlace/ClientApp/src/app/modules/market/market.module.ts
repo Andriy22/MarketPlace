@@ -44,10 +44,17 @@ import {MatTabsModule} from '@angular/material/tabs';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {MatTreeModule} from '@angular/material/tree';
+import { CategoryComponent } from './components/category/category.component';
+import { AddLotComponent } from './components/lots/add-lot/add-lot.component';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MyLotsComponent } from './components/lots/my-lots/my-lots.component';
 
 @NgModule({
   declarations: [
     HomeComponent,
+    CategoryComponent,
+    AddLotComponent,
+    MyLotsComponent
   ],
   imports: [
     CommonModule,
@@ -95,6 +102,8 @@ import {MatTreeModule} from '@angular/material/tree';
     MatTreeModule,
     PortalModule,
     ScrollingModule,
+    ReactiveFormsModule,
+    FormsModule
   ]
 })
 export class MarketModule { }

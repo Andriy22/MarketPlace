@@ -4,14 +4,16 @@ using MarketPlace.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MarketPlace.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20190902192402_Fix1")]
+    partial class Fix1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -59,8 +61,6 @@ namespace MarketPlace.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<string>("OwnerId");
-
                     b.Property<decimal>("Price");
 
                     b.Property<int?>("categoryID");
@@ -68,8 +68,6 @@ namespace MarketPlace.Migrations
                     b.Property<DateTime>("lastUp");
 
                     b.HasKey("ID");
-
-                    b.HasIndex("OwnerId");
 
                     b.HasIndex("categoryID");
 
@@ -254,10 +252,6 @@ namespace MarketPlace.Migrations
 
             modelBuilder.Entity("MarketPlace.Entities.DBEntities.Lot", b =>
                 {
-                    b.HasOne("MarketPlace.Entities.DBEntities.User", "Owner")
-                        .WithMany()
-                        .HasForeignKey("OwnerId");
-
                     b.HasOne("MarketPlace.Entities.DBEntities.Category", "category")
                         .WithMany("Lots")
                         .HasForeignKey("categoryID");

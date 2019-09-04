@@ -13,4 +13,9 @@ td, th {
 .item{
   margin: 1rem;
   font-size: 1rem;
+  text-decoration: none;
+  color: aqua;
+}
+.item_name{
+  font-size: 1.2rem;
 }
