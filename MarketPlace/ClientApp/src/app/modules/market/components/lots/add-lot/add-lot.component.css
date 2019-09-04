@@ -26,3 +26,7 @@ mat-card-title{
 button{
   font-size: 28px;
 }
+.text-area {
+ resize: none;
+ height: 40%;
+}

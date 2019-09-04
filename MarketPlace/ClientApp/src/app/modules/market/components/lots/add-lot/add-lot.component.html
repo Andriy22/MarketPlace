@@ -15,7 +15,8 @@
       </p>
       <p>
         <mat-form-field class="ant-col-24">
-            <input type="text" matInput placeholder="Description" formControlName="description">
+            <!-- <input type="text" matInput > -->
+            <textarea class="text-area" placeholder="Description" formControlName="description" matInput style="resize: none; height: 40%;"></textarea>
             <mat-error *ngIf="lotForm.get('description').hasError('required')">
               Username is <strong>required</strong>
             </mat-error>
@@ -37,6 +38,7 @@
       </div>
       <br>
       <div class="button ant-col-24">
+        <button  style="margin-right: 2rem" type="submit"  color="primary" mat-raised-button mat-button [routerLink]="['/lot/my-lots/' + this.id]" routerLinkActive="router-link-active" >Cancel</button>
         <button [disabled]="!this.lotForm.valid" type="submit"  color="primary" mat-raised-button mat-button>Create Lot</button>
       </div>
 

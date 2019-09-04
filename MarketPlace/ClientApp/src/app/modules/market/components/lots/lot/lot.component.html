@@ -1,0 +1,12 @@
+<h1 style="text-align: center">Ordering</h1>
+<mat-divider></mat-divider>
+<nz-alert nzShowIcon  nzType="info" nzMessage="Before placing an order, be sure to contact the seller through the chat located below (to clarify the timing of the order).
+Your transaction is protected. The seller will not be able to receive payment until you confirm that he has fulfilled all obligations."></nz-alert>
+<div>
+  <h2>Seller: {{this.data.userName}}</h2>
+  <h2>Game: {{this.data.game}}</h2>
+  <h2>Category: {{this.data.category}}</h2>
+  <h2>Short description: {{this.data.name}}</h2>
+  <h2 style="white-space: pre-line;">Description: <br>{{this.data.description}}</h2>
+  <button style="font-size: 1.3rem" mat-raised-button color="primary">Buy for {{this.data.price}}</button>
+</div>

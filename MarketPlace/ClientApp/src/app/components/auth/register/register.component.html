@@ -29,6 +29,14 @@
             </mat-error>
         </mat-form-field>
       </p>
+      <p>
+        <mat-form-field class="ant-col-24">
+            <input type="password" matInput placeholder="Confirm password" formControlName="confirmPassword">
+            <mat-error *ngIf="RegisterForm.get('confirmPassword').hasError('required')">
+              password is <strong>required</strong>
+            </mat-error>
+        </mat-form-field>
+      </p>
       <div *ngIf="error" class="error ant-col-24">
         <p style="text-align: center; font-size: 16px" *ngIf="error"> {{ error }}</p>
       </div>

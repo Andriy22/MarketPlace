@@ -48,15 +48,20 @@ import { CategoryComponent } from './components/category/category.component';
 import { AddLotComponent } from './components/lots/add-lot/add-lot.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyLotsComponent } from './components/lots/my-lots/my-lots.component';
+import { LotComponent } from './components/lots/lot/lot.component';
+import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
+
 
 @NgModule({
   declarations: [
     HomeComponent,
     CategoryComponent,
     AddLotComponent,
-    MyLotsComponent
+    MyLotsComponent,
+    LotComponent
   ],
   imports: [
+    NgZorroAntdModule,
     CommonModule,
     MarketRoutingModule,
     MatDividerModule,

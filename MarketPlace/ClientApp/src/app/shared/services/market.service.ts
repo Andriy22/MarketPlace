@@ -41,7 +41,32 @@ export class MarketService {
   GetMyLots(id: number) {
     return this.http.get(API + '/api/market/getMyLots?id=' + id);
   }
-
+  upLots(id: string) {
+    this.spinner.show();
+    this.http.get(API + '/api/market/upLots?id=' + id).subscribe(() => {
+      this.spinner.hide();
+      this.notify.create(
+        'success',
+        'Success',
+        'Lots upped!',
+      );
+    }, (err: string) => {
+      this.spinner.hide();
+      if (err.indexOf('Wait') !== -1) {
+        this.notify.create(
+          'warning',
+          'Warning',
+          err,
+        );
+      } else {
+        this.notify.create(
+          'error',
+          'Error',
+          err,
+        );
+      }
+    });
+  }
   newLot(Category: string, Name: string, Description: string, Price: string) {
     this.spinner.show();
     this.http.post(API + '/api/market/newLot', {Category, Name, Description, Price}).subscribe(() => {
@@ -55,5 +80,8 @@ export class MarketService {
         err,
       );
      });
+  }
+  getLot(id: string) {
+    return this.http.get(API + '/api/market/getlot?id=' + id);
   }
 }

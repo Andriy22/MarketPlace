@@ -58,6 +58,7 @@ namespace MarketPlace.Controllers
         }
 
 
+
         [HttpGet]
         [Authorize]
         public IActionResult getMyLots(int id)
@@ -98,6 +99,45 @@ namespace MarketPlace.Controllers
                 return BadRequest(new { msg = "Unknow error!" });
             }
          
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult upLots(int id)
+        {
+            Thread.Sleep(2000);
+            foreach (var el in this._context.Lots.Include(x=>x.Owner).Include(x=>x.category).Where(x=>x.category.ID == id && x.Owner.Id == User.Identity.Name).ToList())
+            {
+                if (el.lastUp > DateTime.Now)
+                    return BadRequest(new { msg = "Wait " + Convert.ToInt32((el.lastUp - DateTime.Now).TotalMinutes).ToString() + " minutes!" });
+                el.lastUp = DateTime.Now.AddHours(2);
+            }
+            try
+            {
+                this._context.SaveChanges();
+                return Ok(new { msg = "Lots upped" });
+            } catch(Exception)
+            {
+                return BadRequest(new { msg = "Unknow error" });
+            }
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult getLot(int id)
+        {
+            var lot = this._context.Lots.Include(x => x.category).Include(x => x.Owner).Include(x => x.category).FirstOrDefault(x=>x.ID ==id);
+
+            LotModel data = new LotModel()
+            {
+                Category = lot.category.Name,
+                Game = "None",
+                Price = lot.Price,
+                Name = lot.Name,
+                UserName = lot.Owner.NickName,
+                Description = lot.Description
+            };
+            return Ok(data);
         }
 
 

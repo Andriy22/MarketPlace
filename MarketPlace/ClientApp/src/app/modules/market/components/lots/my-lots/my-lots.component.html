@@ -1,8 +1,10 @@
-<h1 style="text-align: center">Lots Page</h1>
+<h1 style="text-align: center">My Lots</h1>
 <mat-divider></mat-divider>
 <br>
-<div class="ant-col-24">
-  <button type="submit"  color="primary" mat-raised-button mat-button [routerLink]="['/lot/add/' + this.id]" routerLinkActive="router-link-active">SELL</button>
+<div class="ant-col-12">
+  <button style="margin: 1rem" type="submit"  color="primary" mat-raised-button mat-button [routerLink]="['/lot/add/' + this.id]" routerLinkActive="router-link-active">Add lot</button>
+  <button style="margin: 1rem" type="submit"  color="primary" mat-raised-button (click)="this.UpLots()">Up lots</button>
+  <button style="margin: 1rem" type="submit"  color="primary" mat-raised-button mat-button [routerLink]="['/category/' + this.id]" routerLinkActive="router-link-active">Go back</button>
 </div>
 <mat-form-field>
   <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">

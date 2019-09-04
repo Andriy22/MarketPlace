@@ -24,7 +24,7 @@ export class MyLotsComponent implements OnInit {
     this.id = this.route.snapshot.paramMap.get('id');
     this.spinner.show();
     // tslint:disable-next-line: radix
-    this.Ms.GetLots(Number.parseInt(this.id)).subscribe((data: Lot[]) => {
+    this.Ms.GetMyLots(Number.parseInt(this.id)).subscribe((data: Lot[]) => {
       this.dataSource = new MatTableDataSource(data);
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
@@ -40,6 +40,9 @@ export class MyLotsComponent implements OnInit {
     if (this.dataSource.paginator) {
       this.dataSource.paginator.firstPage();
     }
+  }
+  UpLots() {
+    this.Ms.upLots(this.id);
   }
 
 }
