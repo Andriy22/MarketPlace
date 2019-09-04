@@ -1,4 +1,4 @@
-<div style="height: 93vh;">
+<div style="height: 86vh;">
   <mat-toolbar color="primary">
     <div fxShow="true" fxHide.gt-sm="true">
       <button mat-icon-button (click)="sidenav.toggle()">
@@ -67,8 +67,8 @@
 
       </div>
     </mat-sidenav>
-    <mat-sidenav-content fxFlexFill>
-      <div class="container">
+    <mat-sidenav-content  fxFlexFill>
+      <div class="container" style="height: 92.5% !important">
           <router-outlet></router-outlet>
       </div>
 
@@ -80,6 +80,15 @@
       [fullScreen] = "false"
       >
       </ngx-spinner>
+      <mat-toolbar color="primary" style="text-align: center" >
+
+        <a mat-button  href="https://angular.io">
+          <span>Powered by ANGULAR</span>
+        </a>
+        <span class="example-spacer"></span>
+
+      </mat-toolbar>
     </mat-sidenav-content>
   </mat-sidenav-container>
+
 </div>
