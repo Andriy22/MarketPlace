@@ -1,0 +1,33 @@
+<br>
+<mat-card class="ant-col-xl-12 ant-col-xl-offset-6 ant-col-24">
+  <mat-card-title>Personal cabinet</mat-card-title>
+  <mat-card-content>
+    <hr>
+    <div class="item_brand">INFO
+      <mat-list>
+        <mat-list-item>
+         <span>
+             Balance: {{this.balance}} UAN
+            <button class="add-balance"  mat-raised-button color="primary" (click)="this.Show()">ADD</button>
+          </span>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </div>
+
+    <div class="item_brand">Account Security Settings
+      <mat-list>
+        <mat-list-item class="item">
+          <p class="cell-9">
+            Password
+          </p>
+          <a class="cell-3" mat-raised-button color="warn" routerLink="/account/password">Change</a>
+        </mat-list-item>
+        <mat-divider></mat-divider>
+      </mat-list>
+    </div>
+  </mat-card-content>
+</mat-card>
+
+
+<app-add-balance></app-add-balance>
