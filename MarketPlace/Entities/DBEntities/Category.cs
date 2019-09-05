@@ -14,5 +14,6 @@ namespace MarketPlace.Entities.DBEntities
         public int ID { get; set; }
         public string Name { get; set; }
         public ICollection<Lot> Lots { get; set; }
+        public virtual Game @Game { get; set; }
     }
 }

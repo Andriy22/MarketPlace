@@ -52,7 +52,7 @@ namespace MarketPlace.Controllers
             var lots = new HashSet<AllLots>();
             foreach (var el in this._context.Lots.Include(x => x.category).Where(x => x.category.ID == id).ToList().OrderByDescending(x => x.lastUp))
             {
-                lots.Add(new AllLots() { Id = el.ID, Name = el.Name, Price = el.Price });
+                lots.Add(new AllLots() { Id = el.ID, Name = el.Name, Price = el.Price, isActive = Convert.ToBoolean(el.isActive) });
             }
             return Ok(lots);
         }
@@ -76,7 +76,7 @@ namespace MarketPlace.Controllers
         [Authorize]
         public IActionResult newLot(NewLotViewModel model)
         {
-            var category = this._context.Categories.FirstOrDefault(x => x.ID == model.Category);
+            var category = this._context.Categories.Include(x=>x.Game).FirstOrDefault(x => x.ID == model.Category);
             var user = _context.Users.First(x => x.Id == User.Identity.Name);
             if (category == null && user == null)
                 return BadRequest(new { msg = "Category or User not found" });
@@ -87,16 +87,17 @@ namespace MarketPlace.Controllers
                 Name = model.Name,
                 Description = model.Description,
                 Owner = user,
-                lastUp = DateTime.Now
+                lastUp = DateTime.Now,
+                isActive = true
             });
 
             try
             {
                 this._context.SaveChanges();
                 return Ok(new { msg = "added" });
-            } catch(Exception)
+            } catch(Exception e)
             {
-                return BadRequest(new { msg = "Unknow error!" });
+                return BadRequest(new { msg = e.Message });
             }
          
         }

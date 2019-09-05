@@ -65,6 +65,8 @@ namespace MarketPlace.Migrations
 
                     b.Property<int?>("categoryID");
 
+                    b.Property<bool>("isActive");
+
                     b.Property<DateTime>("lastUp");
 
                     b.HasKey("ID");
@@ -247,7 +249,7 @@ namespace MarketPlace.Migrations
 
             modelBuilder.Entity("MarketPlace.Entities.DBEntities.Category", b =>
                 {
-                    b.HasOne("MarketPlace.Entities.DBEntities.Game")
+                    b.HasOne("MarketPlace.Entities.DBEntities.Game", "Game")
                         .WithMany("Categories")
                         .HasForeignKey("GameID");
                 });

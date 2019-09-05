@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MarketPlace.Migrations
 {
     [DbContext(typeof(DBContext))]
-    [Migration("20190829201322_MarketInit")]
-    partial class MarketInit
+    [Migration("20190905150920_init")]
+    partial class init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -57,17 +57,25 @@ namespace MarketPlace.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int?>("CategoryID");
-
                     b.Property<string>("Description");
 
                     b.Property<string>("Name");
 
+                    b.Property<string>("OwnerId");
+
                     b.Property<decimal>("Price");
+
+                    b.Property<int?>("categoryID");
+
+                    b.Property<bool>("isActive");
+
+                    b.Property<DateTime>("lastUp");
 
                     b.HasKey("ID");
 
-                    b.HasIndex("CategoryID");
+                    b.HasIndex("OwnerId");
+
+                    b.HasIndex("categoryID");
 
                     b.ToTable("Lots");
                 });
@@ -243,16 +251,20 @@ namespace MarketPlace.Migrations
 
             modelBuilder.Entity("MarketPlace.Entities.DBEntities.Category", b =>
                 {
-                    b.HasOne("MarketPlace.Entities.DBEntities.Game")
+                    b.HasOne("MarketPlace.Entities.DBEntities.Game", "Game")
                         .WithMany("Categories")
                         .HasForeignKey("GameID");
                 });
 
             modelBuilder.Entity("MarketPlace.Entities.DBEntities.Lot", b =>
                 {
-                    b.HasOne("MarketPlace.Entities.DBEntities.Category")
+                    b.HasOne("MarketPlace.Entities.DBEntities.User", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId");
+
+                    b.HasOne("MarketPlace.Entities.DBEntities.Category", "category")
                         .WithMany("Lots")
-                        .HasForeignKey("CategoryID");
+                        .HasForeignKey("categoryID");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
