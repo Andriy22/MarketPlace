@@ -68,18 +68,23 @@
       </div>
     </mat-sidenav>
     <mat-sidenav-content  fxFlexFill>
-      <div class="container" style="height: 92.5% !important">
-          <router-outlet></router-outlet>
+      <div style="min-height: 92.5% !important">
+          <div class="container">
+              <router-outlet></router-outlet>
+          </div>
+
+          <ngx-spinner
+          bdColor = "#fff"
+          size = "large"
+          color = "#3f51b5"
+          type = "ball-clip-rotate"
+          [fullScreen] = "false"
+          >
+          </ngx-spinner>
       </div>
 
-        <ngx-spinner
-      bdColor = "#fff"
-      size = "large"
-      color = "#3f51b5"
-      type = "ball-clip-rotate"
-      [fullScreen] = "false"
-      >
-      </ngx-spinner>
+
+
       <mat-toolbar color="primary" style="text-align: center" >
 
         <a mat-button  href="https://angular.io">
@@ -88,6 +93,8 @@
         <span class="example-spacer"></span>
 
       </mat-toolbar>
+
+
     </mat-sidenav-content>
   </mat-sidenav-container>
 
