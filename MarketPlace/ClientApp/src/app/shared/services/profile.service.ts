@@ -11,12 +11,12 @@ export class ProfileService {
 private myBalance: BehaviorSubject<number>;
 constructor(private http: HttpClient, private aS: AuthenticationService) {
   this.myBalance = new  BehaviorSubject<number>(0);
-
-  this.aS.isAuth.subscribe((x) => {
-    if ( x ) {
-      this.getBalance();
-    }
-  });
+  // this.getBalance();
+  // this.aS.isAuth.subscribe((x) => {
+  //   if ( x ) {
+  //     this.getBalance();
+  //   }
+  // });
 }
 public get getMyBalance() {
 
@@ -26,10 +26,10 @@ addBalance(code: string) {
   return this.http.get(API + '/api/profile/addbalance?code=' + code);
 }
 
-private getBalance() {
-  this.http.get(API + '/api/profile/myBalance').subscribe((x: number) => {
-    this.myBalance.next(x);
-  });
-}
+// private getBalance() {
+//   this.http.get(API + '/api/profile/myBalance').subscribe((x: number) => {
+//     this.myBalance.next(x);
+//   });
+// }
 
 }

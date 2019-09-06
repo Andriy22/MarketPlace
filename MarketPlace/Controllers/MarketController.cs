@@ -4,12 +4,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MarketPlace.Entities.DBEntities;
+using MarketPlace.Hubs;
 using MarketPlace.Models;
 using MarketPlace.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 namespace MarketPlace.Controllers
 {
@@ -21,6 +23,7 @@ namespace MarketPlace.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly DBContext _context;
+        //private readonly IHubContext<ChatHub> _hubContext;
         public MarketController(UserManager<User> userManager, DBContext dBContext)
         {
             this._userManager = userManager;

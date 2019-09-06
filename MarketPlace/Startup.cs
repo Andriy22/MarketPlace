@@ -1,4 +1,6 @@
 using MarketPlace.Entities.DBEntities;
+using MarketPlace.Helpers;
+using MarketPlace.Hubs;
 using MarketPlace.JWT;
 using MarketPlace.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
@@ -7,11 +9,13 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using System.Threading.Tasks;
 
 namespace MarketPlace
 {
@@ -27,12 +31,15 @@ namespace MarketPlace
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+           
+
+
             services.AddDbContext<DBContext>(options =>
                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MarketPlace")));
             services.AddDefaultIdentity<User>()
                    .AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<DBContext>();
-
+          
             var builder = services.AddIdentityCore<User>(o =>
             {
                 // configure identity options
@@ -44,9 +51,15 @@ namespace MarketPlace
             });
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder.AddEntityFrameworkStores<DBContext>().AddDefaultTokenProviders();
+        
 
-
-            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            services.AddAuthentication(options =>
+                    {
+                        // Identity made Cookie authentication the default.
+                        // However, we want JWT Bearer Auth to be the default.
+                        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
                   .AddJwtBearer(options =>
                   {
                       options.RequireHttpsMetadata = false;
@@ -69,6 +82,36 @@ namespace MarketPlace
                            // валидация ключа безопасности
                            ValidateIssuerSigningKey = true,
                       };
+                      options.Events = new JwtBearerEvents
+                      {
+                          OnMessageReceived = context =>
+                          {
+                              var accessToken = context.Request.Query["access_token"];
+
+                              // If the request is for our hub...
+                              var path = context.HttpContext.Request.Path;
+                              if (!string.IsNullOrEmpty(accessToken) &&
+                                  (path.StartsWithSegments("/chat")))
+                              {
+                                  // Read the token out of the query string
+                                  var token = accessToken.ToString();
+                                  while (true)
+                                  {
+                                      int id = -1;
+                                      id = token.IndexOf('"');
+                                      if(id ==-1)
+                                          id = token.IndexOf('\\');
+                                      if (id == -1)
+                                          break;
+                                      token = token.Remove(id, 1);
+
+                                    
+                                  }
+                                  context.Token = token;
+                              }
+                              return Task.CompletedTask;
+                          }
+                      };
                   });
 
 
@@ -85,14 +128,25 @@ namespace MarketPlace
                     });
             });
 
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+
+
+           
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
 
             });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -112,10 +166,13 @@ namespace MarketPlace
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-
+            app.UseMiddleware<WebSocketsMiddleware>();
             app.UseAuthentication();
             app.UseCors("AllowAll");
-
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chat");
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(
