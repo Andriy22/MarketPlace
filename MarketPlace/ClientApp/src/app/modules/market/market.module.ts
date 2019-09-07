@@ -50,6 +50,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MyLotsComponent } from './components/lots/my-lots/my-lots.component';
 import { LotComponent } from './components/lots/lot/lot.component';
 import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
+import { ChatComponent } from './components/chat/chat.component';
 
 
 @NgModule({
@@ -58,7 +59,8 @@ import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
     CategoryComponent,
     AddLotComponent,
     MyLotsComponent,
-    LotComponent
+    LotComponent,
+    ChatComponent,
   ],
   imports: [
     NgZorroAntdModule,
@@ -108,7 +110,7 @@ import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
     PortalModule,
     ScrollingModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
   ]
 })
 export class MarketModule { }

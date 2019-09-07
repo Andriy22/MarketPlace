@@ -14,6 +14,14 @@ namespace MarketPlace.Hubs
 {
     public class ChatHub : Hub
     {
+        private readonly UserManager<User> _userManager;
+        private readonly DBContext _context;
+        //private readonly IHubContext<ChatHub> _hubContext;
+        public ChatHub(UserManager<User> userManager, DBContext dBContext)
+        {
+            this._userManager = userManager;
+            this._context = dBContext;
+        }
         [Authorize]
         public async Task Send(string message)
         {
@@ -23,21 +31,12 @@ namespace MarketPlace.Hubs
         {
             return Context.ConnectionId;
         }
-      
-        //public override Task OnConnectedAsync()
-        //{
-        //    var ctx = Context;
-        //    string name = Context.User.Identity.Name;
-        //    if (!string.IsNullOrEmpty(name))
-        //    {
-               
-        //        Clients.All.SendAsync("sendBalance", 229);
-        //    } else
-        //    {
-        //        Clients.All.SendAsync("sendBalance", 228);
-        //    }
-           
-        //    return base.OnConnectedAsync();
-        //}
+        [Authorize]
+        public async Task sendMessage(string message)
+        {
+            var user = this._context.Users.FirstOrDefault(x => x.Id == this.Context.User.Identity.Name);
+            await this.Clients.All.SendAsync("reciveMessage", user.NickName, message, "user", "null", DateTime.Now.ToString("MM/dd/yyyy HH:mm"));
+        }
+
     }
 }
