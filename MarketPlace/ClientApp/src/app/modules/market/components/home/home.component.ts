@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, DoCheck } from '@angular/core';
 import {MatPaginator} from '@angular/material/paginator';
 import {MatSort} from '@angular/material/sort';
 import {MatTableDataSource} from '@angular/material/table';
 import { Game } from './../../../../shared/models/games';
 import { MarketService } from './../../../../shared/services/market.service';
 import { async } from 'q';
+import { ChatComponent } from '../chat/chat.component';
 
 
 
@@ -15,9 +16,12 @@ import { async } from 'q';
 })
 export class HomeComponent implements OnInit {
 
+
   displayedColumns: string[] = ['game', 'categories'];
   dataSource: MatTableDataSource<Game>;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
+  @ViewChild(ChatComponent, {static: true})
+  private Chat: ChatComponent;
   constructor(private Ms: MarketService) {
     this.Ms.Games.subscribe((x) => {
      // console.log(x);
@@ -26,7 +30,9 @@ export class HomeComponent implements OnInit {
     // console.log(this.Games);
 
   }
-
+  // ngDoCheck(): void {
+  //   this.Chat.SetID('0');
+  // }
   ngOnInit() {
 
     this.dataSource.paginator = this.paginator;

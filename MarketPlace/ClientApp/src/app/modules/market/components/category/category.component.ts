@@ -6,6 +6,7 @@ import { MarketService } from 'src/app/shared/services/market.service';
 import { NgxSpinnerService } from 'ngx-spinner';
 import { MatTableDataSource, MatSort } from '@angular/material';
 import {MatPaginator} from '@angular/material/paginator';
+import { ChatComponent } from '../chat/chat.component';
 
 @Component({
   selector: 'app-category',
@@ -18,12 +19,15 @@ export class CategoryComponent implements OnInit {
   id: string = null;
   @ViewChild(MatPaginator, {static: true}) paginator: MatPaginator;
   @ViewChild(MatSort, {static: true}) sort: MatSort;
-
+  @ViewChild(ChatComponent, {static: true})
+  private Chat: ChatComponent;
   constructor(private Ms: MarketService, private spinner: NgxSpinnerService, private route: ActivatedRoute) { }
 
 
   ngOnInit(): void {
     this.id = this.route.snapshot.paramMap.get('id');
+    // tslint:disable-next-line: radix
+    this.Chat.SetID(this.id);
     this.spinner.show();
     // tslint:disable-next-line: radix
     this.Ms.GetLots(Number.parseInt(this.id)).subscribe((data: Lot[]) => {

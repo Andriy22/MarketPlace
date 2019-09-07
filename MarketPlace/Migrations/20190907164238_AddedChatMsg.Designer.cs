@@ -4,14 +4,16 @@ using MarketPlace.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MarketPlace.Migrations
 {
     [DbContext(typeof(DBContext))]
-    partial class DBContextModelSnapshot : ModelSnapshot
+    [Migration("20190907164238_AddedChatMsg")]
+    partial class AddedChatMsg
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -44,11 +46,7 @@ namespace MarketPlace.Migrations
 
                     b.Property<string>("Message");
 
-                    b.Property<string>("Room");
-
                     b.Property<string>("SenderId");
-
-                    b.Property<DateTime>("Time");
 
                     b.Property<string>("ToId");
 
