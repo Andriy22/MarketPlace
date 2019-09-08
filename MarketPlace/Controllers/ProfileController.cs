@@ -1,16 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MarketPlace.Entities.DBEntities;
+﻿using MarketPlace.Entities.DBEntities;
 using MarketPlace.Hubs;
 using MarketPlace.Models;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
+using System.Linq;
+using System.Threading;
 
 namespace MarketPlace.Controllers
 {
@@ -27,7 +23,7 @@ namespace MarketPlace.Controllers
             this._context = dBContext;
             this._hubContext = hubContext;
         }
-    
+
         [HttpGet]
         [Authorize]
         public IActionResult addBalance(string code)
@@ -39,7 +35,8 @@ namespace MarketPlace.Controllers
                 this._context.SaveChanges();
                 this._hubContext.Clients.User(User.Identity.Name).SendAsync("sendBalance", this._context.Users.FirstOrDefault(x => x.Id == User.Identity.Name).Balance);
                 return Ok(500);
-            } catch
+            }
+            catch
             {
                 return BadRequest(new { msg = "Unknow error!" });
             }

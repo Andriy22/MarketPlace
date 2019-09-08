@@ -1,18 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
-using MarketPlace.Entities.DBEntities;
-using MarketPlace.Hubs;
+﻿using MarketPlace.Entities.DBEntities;
 using MarketPlace.Models;
 using MarketPlace.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
 namespace MarketPlace.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -37,7 +33,8 @@ namespace MarketPlace.Controllers
 
             Thread.Sleep(2000);
             var games = new HashSet<AllGamesViewModel>();
-            foreach(var el in this._context.Games.Include(x=>x.Categories)) {
+            foreach (var el in this._context.Games.Include(x => x.Categories))
+            {
                 var categories = new HashSet<CategoryViewModel>();
                 foreach (var c in el.Categories)
                     categories.Add(new CategoryViewModel() { Id = c.ID.ToString(), Name = c.Name });
@@ -68,7 +65,7 @@ namespace MarketPlace.Controllers
         {
             Thread.Sleep(2000);
             var lots = new HashSet<AllLots>();
-            foreach (var el in this._context.Lots.Include(x => x.category).Include(x=>x.Owner).Where(x => x.category.ID == id && x.Owner.Id == User.Identity.Name).ToList().OrderByDescending(x => x.lastUp))
+            foreach (var el in this._context.Lots.Include(x => x.category).Include(x => x.Owner).Where(x => x.category.ID == id && x.Owner.Id == User.Identity.Name).ToList().OrderByDescending(x => x.lastUp))
             {
                 lots.Add(new AllLots() { Id = el.ID, Name = el.Name, Price = el.Price });
             }
@@ -79,7 +76,7 @@ namespace MarketPlace.Controllers
         [Authorize]
         public IActionResult newLot(NewLotViewModel model)
         {
-            var category = this._context.Categories.Include(x=>x.Game).FirstOrDefault(x => x.ID == model.Category);
+            var category = this._context.Categories.Include(x => x.Game).FirstOrDefault(x => x.ID == model.Category);
             var user = _context.Users.First(x => x.Id == User.Identity.Name);
             if (category == null && user == null)
                 return BadRequest(new { msg = "Category or User not found" });
@@ -98,11 +95,12 @@ namespace MarketPlace.Controllers
             {
                 this._context.SaveChanges();
                 return Ok(new { msg = "added" });
-            } catch(Exception e)
+            }
+            catch (Exception e)
             {
                 return BadRequest(new { msg = e.Message });
             }
-         
+
         }
 
         [HttpGet]
@@ -110,7 +108,7 @@ namespace MarketPlace.Controllers
         public IActionResult upLots(int id)
         {
             Thread.Sleep(2000);
-            foreach (var el in this._context.Lots.Include(x=>x.Owner).Include(x=>x.category).Where(x=>x.category.ID == id && x.Owner.Id == User.Identity.Name).ToList())
+            foreach (var el in this._context.Lots.Include(x => x.Owner).Include(x => x.category).Where(x => x.category.ID == id && x.Owner.Id == User.Identity.Name).ToList())
             {
                 if (el.lastUp > DateTime.Now)
                     return BadRequest(new { msg = "Wait " + Convert.ToInt32((el.lastUp - DateTime.Now).TotalMinutes).ToString() + " minutes!" });
@@ -120,7 +118,8 @@ namespace MarketPlace.Controllers
             {
                 this._context.SaveChanges();
                 return Ok(new { msg = "Lots upped" });
-            } catch(Exception)
+            }
+            catch (Exception)
             {
                 return BadRequest(new { msg = "Unknow error" });
             }
@@ -130,7 +129,7 @@ namespace MarketPlace.Controllers
         [AllowAnonymous]
         public IActionResult getLot(int id)
         {
-            var lot = this._context.Lots.Include(x => x.category).Include(x => x.Owner).Include(x => x.category).FirstOrDefault(x=>x.ID ==id);
+            var lot = this._context.Lots.Include(x => x.category).Include(x => x.Owner).Include(x => x.category).FirstOrDefault(x => x.ID == id);
 
             LotModel data = new LotModel()
             {

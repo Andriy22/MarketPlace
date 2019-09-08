@@ -6,7 +6,7 @@ using MarketPlace.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SignalR;
@@ -31,7 +31,7 @@ namespace MarketPlace
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-           
+
 
 
             services.AddDbContext<DBContext>(options =>
@@ -39,7 +39,7 @@ namespace MarketPlace
             services.AddDefaultIdentity<User>()
                    .AddRoles<IdentityRole>()
                    .AddEntityFrameworkStores<DBContext>();
-          
+
             var builder = services.AddIdentityCore<User>(o =>
             {
                 // configure identity options
@@ -51,7 +51,7 @@ namespace MarketPlace
             });
             builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
             builder.AddEntityFrameworkStores<DBContext>().AddDefaultTokenProviders();
-        
+
 
             services.AddAuthentication(options =>
                     {
@@ -65,22 +65,22 @@ namespace MarketPlace
                       options.RequireHttpsMetadata = false;
                       options.TokenValidationParameters = new TokenValidationParameters
                       {
-                           // укзывает, будет ли валидироваться издатель при валидации токена
-                           ValidateIssuer = true,
-                           // строка, представляющая издателя
-                           ValidIssuer = AuthOptions.ISSUER,
+                          // укзывает, будет ли валидироваться издатель при валидации токена
+                          ValidateIssuer = true,
+                          // строка, представляющая издателя
+                          ValidIssuer = AuthOptions.ISSUER,
 
-                           // будет ли валидироваться потребитель токена
-                           ValidateAudience = true,
-                           // установка потребителя токена
-                           ValidAudience = AuthOptions.AUDIENCE,
-                           // будет ли валидироваться время существования
-                           ValidateLifetime = true,
+                          // будет ли валидироваться потребитель токена
+                          ValidateAudience = true,
+                          // установка потребителя токена
+                          ValidAudience = AuthOptions.AUDIENCE,
+                          // будет ли валидироваться время существования
+                          ValidateLifetime = true,
 
-                           // установка ключа безопасности
-                           IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
-                           // валидация ключа безопасности
-                           ValidateIssuerSigningKey = true,
+                          // установка ключа безопасности
+                          IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                          // валидация ключа безопасности
+                          ValidateIssuerSigningKey = true,
                       };
                       options.Events = new JwtBearerEvents
                       {
@@ -99,13 +99,13 @@ namespace MarketPlace
                                   {
                                       int id = -1;
                                       id = token.IndexOf('"');
-                                      if(id ==-1)
+                                      if (id == -1)
                                           id = token.IndexOf('\\');
                                       if (id == -1)
                                           break;
                                       token = token.Remove(id, 1);
 
-                                    
+
                                   }
                                   context.Token = token;
                               }
@@ -131,7 +131,7 @@ namespace MarketPlace
 
 
 
-           
+
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR(o =>
@@ -163,10 +163,14 @@ namespace MarketPlace
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
             app.UseDefaultFiles();
             app.UseStaticFiles();
-           // app.UseMiddleware<WebSocketsMiddleware>();
+            // app.UseMiddleware<WebSocketsMiddleware>();
             app.UseAuthentication();
             app.UseCors("AllowAll");
             app.UseSignalR(routes =>

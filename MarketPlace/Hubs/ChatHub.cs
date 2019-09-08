@@ -1,15 +1,15 @@
 ﻿//using MarketPlace.Entities.DBEntities;
+using MarketPlace.Entities.DBEntities;
 using MarketPlace.Models;
+using MarketPlace.Models.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.SignalR;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using MarketPlace.Entities.DBEntities;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.SignalR;
-using MarketPlace.Models.ViewModels;
-using Microsoft.EntityFrameworkCore;
 
 namespace MarketPlace.Hubs
 {
@@ -26,7 +26,7 @@ namespace MarketPlace.Hubs
         [Authorize]
         public async Task Send(string message)
         {
-           await this.Clients.User(Context.User.Identity.Name).SendAsync("sendBalance", 999);
+            await this.Clients.User(Context.User.Identity.Name).SendAsync("sendBalance", 999);
         }
 
 
@@ -35,7 +35,7 @@ namespace MarketPlace.Hubs
         {
             var to = this._context.Users.First(x => x.NickName == username);
             var sender = this._context.Users.FirstOrDefault(x => x.Id == this.Context.User.Identity.Name);
-            if(to != null)
+            if (to != null)
             {
                 var msg = new ChatMsgViewModel()
                 {
@@ -78,7 +78,7 @@ namespace MarketPlace.Hubs
                 room = this._context.Categories.Include(x => x.Game).FirstOrDefault(x => x.ID == category).Game.Name;
             var msgs = this._context.ChatMassages.Include(x => x.Sender).Include(x => x.To).Where(x => x.Time.AddDays(1) >= DateTime.Now && x.To == null && x.Room == room);
             var result = new HashSet<ChatMsgViewModel>();
-            foreach(var el in msgs)
+            foreach (var el in msgs)
             {
                 result.Add(new ChatMsgViewModel()
                 {
@@ -94,9 +94,9 @@ namespace MarketPlace.Hubs
         }
         public async Task GetUsersForSendMeMsg()
         {
-            var msgs = this._context.ChatMassages.Include(x => x.Sender).Include(x => x.To).Where(x => (x.To.Id == this.Context.User.Identity.Name || x.Sender.Id == this.Context.User.Identity.Name) && (x.Sender != null &&x.To != null && x.Room == null)).ToList();
+            var msgs = this._context.ChatMassages.Include(x => x.Sender).Include(x => x.To).Where(x => (x.To.Id == this.Context.User.Identity.Name || x.Sender.Id == this.Context.User.Identity.Name) && (x.Sender != null && x.To != null && x.Room == null)).ToList();
             var users = new HashSet<string>();
-            foreach(var el in msgs)
+            foreach (var el in msgs)
             {
                 if (el.Sender.Id == this.Context.User.Identity.Name)
                     users.Add(el.To.NickName);
