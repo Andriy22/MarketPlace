@@ -124,7 +124,8 @@ namespace MarketPlace
                         .AllowAnyOrigin()
                         .AllowAnyMethod()
                         .AllowAnyHeader()
-                        .AllowCredentials();
+                        .AllowCredentials()
+                        .SetIsOriginAllowed(_ => true);
                     });
             });
 

@@ -17,19 +17,19 @@
       <!-- No auth -->
       <ng-container *ngIf="!this.isAuth; else ToolBarAuth">
 
-          <a mat-button routerLink="/login">Sign In</a>
-          <a mat-button routerLink="/register">Register</a>
+        <a mat-button routerLink="/login">Sign In</a>
+        <a mat-button routerLink="/register">Register</a>
 
 
       </ng-container>
-  <!-- Auth -->
+      <!-- Auth -->
       <ng-template #ToolBarAuth>
-          <a mat-button routerLink="/profile">
-            <span>Profile</span>
-          </a>
-          <a mat-button routerLink="/profile/messages">
-            <span>Messages</span>
-          </a>
+        <a mat-button routerLink="/profile">
+          <span>Profile</span>
+        </a>
+        <a mat-button routerLink="/profile/messages">
+          <span>Messages</span>
+        </a>
         <a mat-button routerLink="/sales">
           <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My sales</span>
         </a>
@@ -40,21 +40,23 @@
           <span>Sign Out</span>
         </a>
       </ng-template>
-  </div>
+    </div>
   </mat-toolbar>
   <mat-sidenav-container fxFlexFill class="example-container">
 
-    <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
+    <mat-sidenav color="primary" #sidenav fxLayout="column" mode="over" opened="false" fxHide.gt-sm="true">
       <div fxLayout="column">
         <ng-container *ngIf="!this.isAuth; else SideBarAuth">
-            <a mat-button routerLink="/login">Sign In</a>
-            <a mat-button routerLink="/register">Register</a>
+          <a mat-button routerLink="/login">Sign In</a>
+          <a mat-button routerLink="/register">Register</a>
         </ng-container>
         <ng-template #SideBarAuth>
-            <a mat-button routerLink="/Trades">
-              <span>Profile</span>
-            </a>
-
+          <a mat-button routerLink="/profile">
+            <span>Profile</span>
+          </a>
+          <a mat-button routerLink="/profile/messages">
+            <span>Messages</span>
+          </a>
           <a mat-button routerLink="/sales">
             <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My sales</span>
           </a>
@@ -69,31 +71,25 @@
 
       </div>
     </mat-sidenav>
-    <mat-sidenav-content  fxFlexFill>
+    <mat-sidenav-content fxFlexFill>
       <div style="min-height: 92.5% !important">
-          <div class="container">
-              <router-outlet></router-outlet>
-          </div>
+        <div class="container">
+          <router-outlet></router-outlet>
+        </div>
 
-          <ngx-spinner
-          bdColor = "#fff"
-          size = "large"
-          color = "#3f51b5"
-          type = "ball-clip-rotate"
-          [fullScreen] = "false"
-          >
-          </ngx-spinner>
+        <ngx-spinner bdColor="#fff" size="large" color="#3f51b5" type="ball-clip-rotate" [fullScreen]="false">
+        </ngx-spinner>
       </div>
 
 
 
-      <mat-toolbar color="primary" style="text-align: center" >
+      <mat-toolbar color="primary" style="text-align: center">
 
-        <a mat-button  href="https://angular.io">
+        <a mat-button href="https://angular.io">
           <span>Powered by ANGULAR</span>
         </a>
         <span class="example-spacer">
-          ALPHA-TEST
+          ©2019 PSYHO-TEAM INC.
         </span>
 
       </mat-toolbar>

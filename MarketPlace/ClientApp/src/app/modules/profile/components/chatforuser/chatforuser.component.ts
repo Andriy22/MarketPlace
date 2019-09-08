@@ -32,7 +32,9 @@ export class ChatforuserComponent implements OnInit {
       .start().then(() => {
         this._hubConnection.invoke('GetUsersForSendMeMsg');
         this.username.subscribe((x) => {
-          this._hubConnection.invoke('GetMessagesToMe', x);
+          if (x != null) {
+            this._hubConnection.invoke('GetMessagesToMe', x);
+          }
         });
       })
       .catch(err => console.log('Error while establishing connection :('));
@@ -77,7 +79,9 @@ export class ChatforuserComponent implements OnInit {
     // this.id.subscribe((id) => {
     //   this._hubConnection.invoke('SendAllMessages', id);
     // });
-    this._hubConnection.invoke('SendMessageToUser', this.username.value, this.message);
-    this.message = '';
+    if (this.username.value != null) {
+      this._hubConnection.invoke('SendMessageToUser', this.username.value, this.message);
+      this.message = '';
+    }
   }
 }

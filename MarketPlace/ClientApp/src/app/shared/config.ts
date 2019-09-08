@@ -1,1 +1,1 @@
-export const API = 'https://localhost:44333';
+export const API = window.location.origin; // 'https://localhost:44333';
