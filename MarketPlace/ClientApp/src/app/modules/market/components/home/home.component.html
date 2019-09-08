@@ -1,0 +1,31 @@
+<h1 style="text-align: center">Home Page</h1>
+<mat-divider></mat-divider>
+
+<app-chat ></app-chat>
+
+<mat-form-field>
+    <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Filter">
+  </mat-form-field>
+
+  <div class="mat-elevation-z8">
+    <table mat-table [dataSource]="dataSource">
+
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="game">
+        <th mat-header-cell *matHeaderCellDef> Game </th>
+        <td mat-cell *matCellDef="let row" class="item_name"> {{row.game}} </td>
+      </ng-container>
+
+      <!-- Color Column -->
+      <ng-container matColumnDef="categories">
+        <th mat-header-cell *matHeaderCellDef> Categories </th>
+        <td mat-cell *matCellDef="let row" > <span class="item" *ngFor="let item of row.categories"> <a [routerLink]="['/category/'+ item.id]" routerLinkActive="router-link-active" >{{item.name}}</a> </span> </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+      </tr>
+    </table>
+
+  </div>

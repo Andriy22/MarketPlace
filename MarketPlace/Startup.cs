@@ -1,10 +1,21 @@
+using MarketPlace.Entities.DBEntities;
+using MarketPlace.Helpers;
+using MarketPlace.Hubs;
+using MarketPlace.JWT;
+using MarketPlace.Models;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
+using Microsoft.AspNetCore.HttpOverrides;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Threading.Tasks;
 
 namespace MarketPlace
 {
@@ -20,14 +31,122 @@ namespace MarketPlace
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
 
+
+
+            services.AddDbContext<DBContext>(options =>
+               options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection"), b => b.MigrationsAssembly("MarketPlace")));
+            services.AddDefaultIdentity<User>()
+                   .AddRoles<IdentityRole>()
+                   .AddEntityFrameworkStores<DBContext>();
+
+            var builder = services.AddIdentityCore<User>(o =>
+            {
+                // configure identity options
+                o.Password.RequireDigit = false;
+                o.Password.RequireLowercase = false;
+                o.Password.RequireUppercase = false;
+                o.Password.RequireNonAlphanumeric = false;
+                o.Password.RequiredLength = 6;
+            });
+            builder = new IdentityBuilder(builder.UserType, typeof(IdentityRole), builder.Services);
+            builder.AddEntityFrameworkStores<DBContext>().AddDefaultTokenProviders();
+
+
+            services.AddAuthentication(options =>
+                    {
+                        // Identity made Cookie authentication the default.
+                        // However, we want JWT Bearer Auth to be the default.
+                        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+                        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+                    })
+                  .AddJwtBearer(options =>
+                  {
+                      options.RequireHttpsMetadata = false;
+                      options.TokenValidationParameters = new TokenValidationParameters
+                      {
+                          // укзывает, будет ли валидироваться издатель при валидации токена
+                          ValidateIssuer = true,
+                          // строка, представляющая издателя
+                          ValidIssuer = AuthOptions.ISSUER,
+
+                          // будет ли валидироваться потребитель токена
+                          ValidateAudience = true,
+                          // установка потребителя токена
+                          ValidAudience = AuthOptions.AUDIENCE,
+                          // будет ли валидироваться время существования
+                          ValidateLifetime = true,
+
+                          // установка ключа безопасности
+                          IssuerSigningKey = AuthOptions.GetSymmetricSecurityKey(),
+                          // валидация ключа безопасности
+                          ValidateIssuerSigningKey = true,
+                      };
+                      options.Events = new JwtBearerEvents
+                      {
+                          OnMessageReceived = context =>
+                          {
+                              var accessToken = context.Request.Query["access_token"];
+
+                              // If the request is for our hub...
+                              var path = context.HttpContext.Request.Path;
+                              if (!string.IsNullOrEmpty(accessToken) &&
+                                  (path.StartsWithSegments("/chat")))
+                              {
+                                  // Read the token out of the query string
+                                  var token = accessToken.ToString();
+                                  while (true)
+                                  {
+                                      int id = -1;
+                                      id = token.IndexOf('"');
+                                      if (id == -1)
+                                          id = token.IndexOf('\\');
+                                      if (id == -1)
+                                          break;
+                                      token = token.Remove(id, 1);
+
+
+                                  }
+                                  context.Token = token;
+                              }
+                              return Task.CompletedTask;
+                          }
+                      };
+                  });
+
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowAll",
+                    b =>
+                    {
+                        b
+                        .AllowAnyOrigin()
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                    });
+            });
+
+
+
+
+
+
+            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
+            services.AddSignalR(o =>
+            {
+                o.EnableDetailedErrors = true;
+            });
+            services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             // In production, the Angular files will be served from this directory
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
 
             });
+
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -44,10 +163,20 @@ namespace MarketPlace
                 app.UseHsts();
             }
 
-            app.UseHttpsRedirection();
+            //app.UseHttpsRedirection();
+            app.UseForwardedHeaders(new ForwardedHeadersOptions
+            {
+                ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+            });
+            app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseSpaStaticFiles();
-
+            // app.UseMiddleware<WebSocketsMiddleware>();
+            app.UseAuthentication();
+            app.UseCors("AllowAll");
+            app.UseSignalR(routes =>
+            {
+                routes.MapHub<ChatHub>("/chat");
+            });
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

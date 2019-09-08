@@ -1,0 +1,29 @@
+
+<div class="mat-content" class="chat">
+  <mat-card tdMediaToggle="gt-xs">
+    <mat-list >
+
+        <mat-list-item class="pad-top pad-bottom" *ngFor="let item of this.messages">
+          <!-- <img matListAvatar src="https://api.adorable.io/avatars/285/{{i}}@adorable.io.png" /> -->
+          <h3 matLine class="cursor-pointer"> {{item.nickname}}   {{item.role}} <span class="tc-grey-500 md-caption">{{item.time}}</span></h3>
+          <div matLine>
+            <div class="text-wrap" style="word-wrap:break-word;">
+            {{item.message}}
+            </div>
+          </div>
+        </mat-list-item>
+        <mat-divider *ngIf="!last" mat-inset></mat-divider>
+    </mat-list>
+  </mat-card>
+</div>
+<mat-divider></mat-divider>
+
+<mat-card *ngIf="this.aS.isAuth | async">
+  <div layout="row" layout-align="start center">
+    <mat-form-field style="width: 100%" flex layout="row" floatPlaceholder="never">
+      <textarea [(ngModel)]="this.message" style="width: 100%" matInput placeholder="message"></textarea>
+
+    </mat-form-field>
+    <button  [disabled]="this.message.length == 0" type="submit" color="primary" mat-raised-button mat-button (click)="this.Send()">Send</button>
+  </div>
+</mat-card>

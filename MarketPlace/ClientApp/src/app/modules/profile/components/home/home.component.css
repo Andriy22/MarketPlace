@@ -1,0 +1,41 @@
+:host {
+  display: flex;
+  margin: 100px 0px;
+}
+
+.mat-form-field {
+  font-size: 24px;
+}
+
+mat-card-title{
+  text-align: center;
+  font-size: 30px;
+}
+.add-balance{
+  font-size: 1rem;
+}
+.error {
+  padding: 16px;
+  color: white;
+  background-color: darkred;
+  text-align: center;
+  font-size: 28px;
+}
+
+.button {
+  display: flex;
+  justify-content: flex-end;
+}
+button{
+  font-size: 28px;
+}
+.item {
+  font-size: 1.3rem !important;
+  font-weight: normal !important;
+  padding: 0 auto;
+}
+.item_brand {
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin: 0 auto 3rem auto;
+}

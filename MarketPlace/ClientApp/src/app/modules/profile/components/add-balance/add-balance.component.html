@@ -1,0 +1,11 @@
+  <nz-modal
+    [(nzVisible)]="isVisible"
+    nzTitle="Add Balance"
+    (nzOnCancel)="handleCancel()"
+    (nzOnOk)="handleOk()"
+    [nzOkLoading]="isOkLoading"
+  >
+  <mat-form-field class="ant-col-24">
+      <input style="font-size: 1.3rem" matInput placeholder="Promo Code" [(ngModel)]="this.code">
+    </mat-form-field>
+  </nz-modal>
