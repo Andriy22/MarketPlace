@@ -14,11 +14,10 @@ import { BehaviorSubject } from 'rxjs';
 export class ChatComponent implements OnInit {
   private _hubConnection: HubConnection;
   id: BehaviorSubject<string>;
-  messages: MessageModel[] = [{nickname: 'user', message: 'test', role: 'admin', ava: 'null', time: '24-08-2019' }];
+  messages: MessageModel[] = [];
   message =  '';
   constructor(protected aS: AuthenticationService) {
     this.id = new BehaviorSubject<string>('0');
-    this.messages.push({nickname: 'user', message: 'test', role: 'admin', ava: 'null', time: '24-08-2019' });
     this.message = '';
    }
 

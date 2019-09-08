@@ -4,4 +4,5 @@ export class MessageModel {
   role: string;
   ava: string;
   time: string;
+  toname: string;
 }

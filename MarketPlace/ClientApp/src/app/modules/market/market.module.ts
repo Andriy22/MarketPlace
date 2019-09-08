@@ -51,6 +51,7 @@ import { MyLotsComponent } from './components/lots/my-lots/my-lots.component';
 import { LotComponent } from './components/lots/lot/lot.component';
 import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
 import { ChatComponent } from './components/chat/chat.component';
+import { ChatforlotComponent } from './components/lots/chatforlot/chatforlot.component';
 
 
 @NgModule({
@@ -61,6 +62,7 @@ import { ChatComponent } from './components/chat/chat.component';
     MyLotsComponent,
     LotComponent,
     ChatComponent,
+    ChatforlotComponent
   ],
   imports: [
     NgZorroAntdModule,

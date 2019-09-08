@@ -47,12 +47,14 @@ import {MatTreeModule} from '@angular/material/tree';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material';
 import { AddBalanceComponent } from './components/add-balance/add-balance.component';
+import { ChatforuserComponent } from './components/chatforuser/chatforuser.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
-    AddBalanceComponent
+    AddBalanceComponent,
+    ChatforuserComponent
   ],
   imports: [
     ProfileRoutingModule,

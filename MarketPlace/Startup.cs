@@ -166,7 +166,7 @@ namespace MarketPlace
             app.UseHttpsRedirection();
             app.UseDefaultFiles();
             app.UseStaticFiles();
-            app.UseMiddleware<WebSocketsMiddleware>();
+           // app.UseMiddleware<WebSocketsMiddleware>();
             app.UseAuthentication();
             app.UseCors("AllowAll");
             app.UseSignalR(routes =>

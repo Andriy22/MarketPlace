@@ -12,5 +12,6 @@ namespace MarketPlace.Models.ViewModels
         public string role { get; set; }
         public string ava { get; set; }
         public string time { get; set; }
+        public string toname { get; set; }
     }
 }
