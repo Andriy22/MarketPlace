@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { AddBalanceComponent } from '../add-balance/add-balance.component';
 import { ProfileService } from 'src/app/shared/services/profile.service';
 import { HubConnection, HubConnectionBuilder, HttpTransportType, LogLevel } from '@aspnet/signalr';
+import { API } from './../../../../shared/config';
 @Component({
   selector: 'app-profile-home',
   templateUrl: './home.component.html',
@@ -17,7 +18,7 @@ export class HomeComponent implements OnInit {
 
   ngOnInit() {
 
-    this._hubConnection = new HubConnectionBuilder().withUrl('https://localhost:44333/chat', {
+    this._hubConnection = new HubConnectionBuilder().withUrl(API + '/chat', {
       accessTokenFactory: () => {
         return window.localStorage.getItem('access_token');
       }
@@ -30,7 +31,6 @@ export class HomeComponent implements OnInit {
         this._hubConnection.invoke('Send', '123');
       })
       .catch(err => console.log('Error while establishing connection :('));
-    console.log(this._hubConnection.state);
 
     this._hubConnection.on('sendBalance', (balance: number) => {
       console.log(balance);
