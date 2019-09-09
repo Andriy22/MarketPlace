@@ -52,6 +52,9 @@ import { LotComponent } from './components/lots/lot/lot.component';
 import { NgZorroAntdModule, NZ_ICONS } from 'ng-zorro-antd';
 import { ChatComponent } from './components/chat/chat.component';
 import { ChatforlotComponent } from './components/lots/chatforlot/chatforlot.component';
+import { SalesComponent } from './components/sales/sales.component';
+import { OrderComponent } from './components/order/order.component';
+import { PurchasesComponent } from './components/purchases/purchases.component';
 
 
 @NgModule({
@@ -62,7 +65,10 @@ import { ChatforlotComponent } from './components/lots/chatforlot/chatforlot.com
     MyLotsComponent,
     LotComponent,
     ChatComponent,
-    ChatforlotComponent
+    ChatforlotComponent,
+    SalesComponent,
+    OrderComponent,
+    PurchasesComponent
   ],
   imports: [
     NgZorroAntdModule,

@@ -12,5 +12,7 @@ namespace MarketPlace.Entities.DBEntities
         public virtual User Buyer { get; set; }
         public Lot @Lot { get; set; }
         public bool isCompleted { get; set; }
+        public DateTime timeOpen { get; set; }
+        public DateTime timeClosed { get; set; }
     }
 }

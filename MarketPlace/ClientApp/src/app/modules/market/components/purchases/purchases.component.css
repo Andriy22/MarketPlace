@@ -1,0 +1,21 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td, th {
+  width: 25%;
+}
+.item{
+  margin: 1rem;
+  font-size: 1rem;
+  text-decoration: none;
+  color: aqua;
+}
+.item_name{
+  font-size: 1.2rem;
+}

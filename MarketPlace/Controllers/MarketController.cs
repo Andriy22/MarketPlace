@@ -83,12 +83,16 @@ namespace MarketPlace.Controllers
 
             if (user.Balance - lot.Price < 0)
                 return BadRequest(new { msg = "You do not have enough money!" });
+            if(lot.Owner.Id == user.Id)
+                return BadRequest(new { msg = "You can't buy from yourself!" });
             var order = new Order()
             {
                 Lot = lot,
                 Seller = lot.Owner,
                 Buyer = user,
-                isCompleted = false
+                isCompleted = false,
+                timeOpen = DateTime.Now,
+                timeClosed = DateTime.Now,
             };
             _context.Users.FirstOrDefault(x => x.Id == User.Identity.Name).Balance -= lot.Price;
           
@@ -108,7 +112,8 @@ namespace MarketPlace.Controllers
             if (order.Buyer.Id != User.Identity.Name)
                 return BadRequest(new { msg = "Access denied!" });
             _context.Users.FirstOrDefault(x => x.Id == order.Seller.Id).Balance += order.Lot.Price;
-            _context.Orders.FirstOrDefault(x => x == order).isCompleted = true;
+            _context.Orders.FirstOrDefault(x => x.Id == order.Id).isCompleted = true;
+            _context.Orders.FirstOrDefault(x => x.Id == order.Id).timeClosed = DateTime.Now;
             _context.SaveChanges();
             _hubContext.Clients.User(order.Buyer.Id).SendAsync("getPurchases", this._context.Orders.Include(x => x.Buyer).Where(x => x.Buyer.Id == order.Buyer.Id && x.isCompleted == false).ToList().Count);
             _hubContext.Clients.User(order.Seller.Id).SendAsync("getSales", this._context.Orders.Include(x => x.Buyer).Where(x => x.Seller.Id == order.Seller.Id && x.isCompleted == false).ToList().Count);
@@ -124,7 +129,8 @@ namespace MarketPlace.Controllers
             if (order.Seller.Id != User.Identity.Name)
                 return BadRequest(new { msg = "Access denied!" });
             _context.Users.FirstOrDefault(x => x.Id == order.Buyer.Id).Balance += order.Lot.Price;
-            _context.Orders.FirstOrDefault(x => x == order).isCompleted = true;
+            _context.Orders.FirstOrDefault(x => x.Id == order.Id).isCompleted = true;
+            _context.Orders.FirstOrDefault(x => x.Id == order.Id).timeClosed = DateTime.Now;
             _context.SaveChanges();
             _hubContext.Clients.User(order.Buyer.Id).SendAsync("getPurchases", this._context.Orders.Include(x => x.Buyer).Where(x => x.Buyer.Id == order.Buyer.Id && x.isCompleted == false).ToList().Count);
             _hubContext.Clients.User(order.Seller.Id).SendAsync("getSales", this._context.Orders.Include(x => x.Seller).Where(x => x.Seller.Id == order.Seller.Id && x.isCompleted == false).ToList().Count);
@@ -160,7 +166,86 @@ namespace MarketPlace.Controllers
             }
 
         }
+        [HttpGet]
+        [Authorize]
+        public IActionResult getmySales()
+        {
+            var orders = this._context.Orders.Include(x => x.Seller).Include(x => x.Buyer).Include(x => x.Lot).Include(x => x.Lot.category).Where(x=>x.Seller.Id == User.Identity.Name).ToList();
+            if(orders != null)
+            {
+                var result = new HashSet<OrderViewModel>();
+                foreach(var el in orders)
+                {
+                    result.Add(new OrderViewModel()
+                    {
+                        saller = el.Seller.NickName,
+                        buyer = el.Buyer.NickName,
+                        category = el.Lot.category.Name,
+                        id = el.Id,
+                        price = el.Lot.Price,
+                        timeClosed = el.timeClosed.ToString("MM/dd/yyyy HH:mm"),
+                        timeOpen = el.timeOpen.ToString("MM/dd/yyyy HH:mm"),
+                        isCompleted = el.isCompleted,
+                        name = el.Lot.Name
+                    });
+                }
+                return Ok(result);
+            }
+            return BadRequest(new { msg = "orders is null" });
+        }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult getOrder(int id )
+        {
+
+            var el = this._context.Orders.Include(x => x.Seller).Include(x => x.Buyer).Include(x => x.Lot).Include(x => x.Lot.category).FirstOrDefault(x=>x.Id == id);
+            if(el != null)
+            {
+                var result = new OrderViewModel()
+                {
+                    saller = el.Seller.NickName,
+                    buyer = el.Buyer.NickName,
+                    category = el.Lot.category.Name,
+                    id = el.Id,
+                    price = el.Lot.Price,
+                    timeClosed = el.timeClosed.ToString("MM/dd/yyyy HH:mm"),
+                    timeOpen = el.timeOpen.ToString("MM/dd/yyyy HH:mm"),
+                    isCompleted = el.isCompleted,
+                    name = el.Lot.Name
+                };
+                return Ok(result);
+            }
+            return BadRequest(new { msg = "Lot not found" });
+        }
+
+        [HttpGet]
+        [Authorize]
+        public IActionResult getmyBuys()
+        {
+            var orders = this._context.Orders.Include(x => x.Seller).Include(x => x.Buyer).Include(x => x.Lot).Include(x => x.Lot.category).Where(x=>x.Buyer.Id == User.Identity.Name).ToList();
+            if (orders != null)
+            {
+                var result = new HashSet<OrderViewModel>();
+                foreach (var el in orders)
+                {
+                    result.Add(new OrderViewModel()
+                    {
+                        saller = el.Seller.NickName,
+                        buyer = el.Buyer.NickName,
+                        category = el.Lot.category.Name,
+                        id = el.Id,
+                        price = el.Lot.Price,
+                        timeClosed = el.timeClosed.ToString("MM/dd/yyyy HH:mm"),
+                        timeOpen = el.timeOpen.ToString("MM/dd/yyyy HH:mm"),
+                        isCompleted = el.isCompleted,
+                        name = el.Lot.Name
+                    });
+                }
+                return Ok(result);
+            }
+            return BadRequest(new { msg = "orders is null" });
+        }
         [HttpGet]
         [Authorize]
         public IActionResult upLots(int id)

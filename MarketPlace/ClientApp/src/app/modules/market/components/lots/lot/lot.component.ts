@@ -37,7 +37,7 @@ export class LotComponent implements OnInit {
       this.spinner.hide();
       this.router.navigate(['/purchases']);
     }, (err) => {
-      this.spinner.show();
+      this.spinner.hide();
       this.notify.create(
         'error',
         'Error!',

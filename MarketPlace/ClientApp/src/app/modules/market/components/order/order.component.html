@@ -1,0 +1,57 @@
+<ng-template nzKey = 'conf'  #confirmBuy let-notification>
+  <div class="ant-notification-notice-content">
+    <div>
+      <div class="ant-notification-notice-message">Сonfirm execution</div>
+      <div class="ant-notification-notice-description">
+        After confirmation, we can not refund your money!
+      </div>
+      <span class="ant-notification-notice-btn">
+        <button nz-button nzType="primary" nzSize="small" (click)="confirm()">
+          <span>Confirm</span>
+        </button>
+      </span>
+    </div>
+  </div>
+</ng-template>
+<ng-template nzKey = 'ret' #returnMoney let-notification>
+    <div class="ant-notification-notice-content">
+      <div>
+        <div class="ant-notification-notice-message">Сonfirm execution</div>
+        <div class="ant-notification-notice-description">
+          After confirmation, we can not refund your money!
+        </div>
+        <span class="ant-notification-notice-btn">
+          <button nz-button nzType="primary" nzSize="small" (click)="this.ReturnMon(this.returnMoney)">
+            <span>Confirm</span>
+          </button>
+        </span>
+      </div>
+    </div>
+  </ng-template>
+
+<h1 style="text-align: center">Ordering</h1>
+<mat-divider></mat-divider>
+<div>
+  <h2>Seller: {{this.data?.saller}}</h2>
+  <h2>Buyer: {{this.data?.buyer}}</h2>
+  <h2>Price: {{this.data?.price}}</h2>
+  <h2>Category: {{this.data?.category}}</h2>
+  <h2>Short description: {{this.data?.name}}</h2>
+  <h2>Open time: {{this.data?.timeOpen}}</h2>
+  <h2 *ngIf="this.data?.timeOpen != this.data?.timeClosed">
+    Closed time: {{this.data?.timeClosed}}
+  </h2>
+
+  <h2>is Completed: {{this.data.isCompleted}}</h2>
+  <div *ngIf="!this.data.isCompleted">
+      <button *ngIf="this.aS.currentUserValue.nickname === this.data?.saller" style="font-size: 1.3rem; margin: 1rem"
+      mat-raised-button color="primary" (click)="createBasicNotification(this.returnMoney)">Return money.</button>
+      <button *ngIf="this.aS.currentUserValue.nickname === this.data?.buyer" style="font-size: 1.3rem; margin: 1rem"
+      mat-raised-button color="primary" (click)="createBasicNotification(this.confirmBuy)">Сonfirm execution.</button>
+  </div>
+
+</div>
+
+
+<mat-divider></mat-divider>
+<!-- <app-chatforlot></app-chatforlot> -->

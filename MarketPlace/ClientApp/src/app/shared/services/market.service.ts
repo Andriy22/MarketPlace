@@ -34,6 +34,44 @@ export class MarketService {
       );
     });
   }
+  Confirm(id: string) {
+    this.spinner.show();
+    this.http.get(API + '/api/market/ConfirmBuy?id=' + id).subscribe((x) => {
+      this.spinner.hide();
+      this.router.navigate(['/sales']);
+    }, (err) => {
+      this.spinner.hide();
+      this.notify.create(
+        'error',
+        'Error',
+        err,
+      );
+    });
+
+  }
+  ReturnMoney(id: string) {
+    this.spinner.show();
+    this.http.get(API + '/api/market/ReturnMoney?id=' + id).subscribe((x) => {
+      this.spinner.hide();
+      this.router.navigate(['/sales']);
+    }, (err) => {
+      this.spinner.hide();
+      this.notify.create(
+        'error',
+        'Error',
+        err,
+      );
+    });
+  }
+  getOrder(id: string) {
+    return this.http.get(API + '/api/market/getOrder?id=' + id);
+  }
+  getSales() {
+    return this.http.get(API + '/api/market/getmySales');
+  }
+  getPurchases() {
+    return this.http.get(API + '/api/market/getmyBuys');
+  }
   Buy(id: string) {
     return this.http.get(API + '/api/market/buy?id=' + id);
   }
