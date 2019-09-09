@@ -34,7 +34,9 @@ export class MarketService {
       );
     });
   }
-
+  Buy(id: string) {
+    return this.http.get(API + '/api/market/buy?id=' + id);
+  }
   GetLots(id: number) {
     return this.http.get(API + '/api/market/getLots?id=' + id);
   }

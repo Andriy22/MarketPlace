@@ -1,9 +1,11 @@
 ﻿using MarketPlace.Entities.DBEntities;
+using MarketPlace.Hubs;
 using MarketPlace.Models;
 using MarketPlace.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -19,11 +21,12 @@ namespace MarketPlace.Controllers
 
         private readonly UserManager<User> _userManager;
         private readonly DBContext _context;
-        //private readonly IHubContext<ChatHub> _hubContext;
-        public MarketController(UserManager<User> userManager, DBContext dBContext)
+        private readonly IHubContext<ChatHub> _hubContext;
+        public MarketController(UserManager<User> userManager, DBContext dBContext, IHubContext<ChatHub> hubContext)
         {
             this._userManager = userManager;
             this._context = dBContext;
+            this._hubContext = hubContext;
         }
 
         [HttpGet]
@@ -72,6 +75,61 @@ namespace MarketPlace.Controllers
             return Ok(lots);
         }
 
+        [HttpGet]
+        [Authorize]
+        public IActionResult Buy(int id) {
+            var user = _context.Users.FirstOrDefault(x => x.Id == User.Identity.Name);
+            var lot = _context.Lots.Include(x => x.Owner).First(x => x.ID == id);
+
+            if (user.Balance - lot.Price < 0)
+                return BadRequest(new { msg = "You do not have enough money!" });
+            var order = new Order()
+            {
+                Lot = lot,
+                Seller = lot.Owner,
+                Buyer = user,
+                isCompleted = false
+            };
+            _context.Users.FirstOrDefault(x => x.Id == User.Identity.Name).Balance -= lot.Price;
+          
+            this._context.Orders.Add(order);
+            this._context.SaveChanges();
+            _hubContext.Clients.User(order.Buyer.Id).SendAsync("getPurchases", this._context.Orders.Include(x => x.Buyer).Where(x => x.Buyer.Id == user.Id && x.isCompleted == false).ToList().Count);
+            _hubContext.Clients.User(order.Seller.Id).SendAsync("getSales", this._context.Orders.Include(x => x.Buyer).Where(x => x.Seller.Id == order.Seller.Id && x.isCompleted == false).ToList().Count);
+            return Ok();
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult ConfirmBuy(int id)
+        {
+            var order = _context.Orders.Include(x=>x.Lot).Include(x=>x.Seller).Include(x=>x.Buyer).FirstOrDefault(x => x.Id == id);
+            if (order == null)
+                return BadRequest(new { msg = "Order not found" });
+            if (order.Buyer.Id != User.Identity.Name)
+                return BadRequest(new { msg = "Access denied!" });
+            _context.Users.FirstOrDefault(x => x.Id == order.Seller.Id).Balance += order.Lot.Price;
+            _context.Orders.FirstOrDefault(x => x == order).isCompleted = true;
+            _context.SaveChanges();
+            _hubContext.Clients.User(order.Buyer.Id).SendAsync("getPurchases", this._context.Orders.Include(x => x.Buyer).Where(x => x.Buyer.Id == order.Buyer.Id && x.isCompleted == false).ToList().Count);
+            _hubContext.Clients.User(order.Seller.Id).SendAsync("getSales", this._context.Orders.Include(x => x.Buyer).Where(x => x.Seller.Id == order.Seller.Id && x.isCompleted == false).ToList().Count);
+            return Ok();
+        }
+        [HttpGet]
+        [Authorize]
+        public IActionResult ReturnMoney(int id)
+        {
+            var order = _context.Orders.Include(x => x.Lot).Include(x => x.Seller).Include(x => x.Buyer).FirstOrDefault(x => x.Id == id);
+            if (order == null)
+                return BadRequest(new { msg = "Order not found" });
+            if (order.Seller.Id != User.Identity.Name)
+                return BadRequest(new { msg = "Access denied!" });
+            _context.Users.FirstOrDefault(x => x.Id == order.Buyer.Id).Balance += order.Lot.Price;
+            _context.Orders.FirstOrDefault(x => x == order).isCompleted = true;
+            _context.SaveChanges();
+            _hubContext.Clients.User(order.Buyer.Id).SendAsync("getPurchases", this._context.Orders.Include(x => x.Buyer).Where(x => x.Buyer.Id == order.Buyer.Id && x.isCompleted == false).ToList().Count);
+            _hubContext.Clients.User(order.Seller.Id).SendAsync("getSales", this._context.Orders.Include(x => x.Seller).Where(x => x.Seller.Id == order.Seller.Id && x.isCompleted == false).ToList().Count);
+            return Ok();
+        }
         [HttpPost]
         [Authorize]
         public IActionResult newLot(NewLotViewModel model)
@@ -133,6 +191,7 @@ namespace MarketPlace.Controllers
 
             LotModel data = new LotModel()
             {
+                id = lot.ID,
                 Category = lot.category.Name,
                 Game = "None",
                 Price = lot.Price,

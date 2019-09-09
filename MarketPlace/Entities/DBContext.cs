@@ -15,5 +15,6 @@ namespace MarketPlace.Models
         public DbSet<Category> Categories { get; set; }
         public DbSet<Game> Games { get; set; }
         public DbSet<ChatMassage> ChatMassages { get; set; }
+        public DbSet<Order> Orders { get; set; }
     }
 }

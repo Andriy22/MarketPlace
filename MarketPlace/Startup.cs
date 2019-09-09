@@ -137,7 +137,7 @@ namespace MarketPlace
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2);
             services.AddSignalR(o =>
             {
-                o.EnableDetailedErrors = true;
+                o.EnableDetailedErrors = false;
             });
             services.AddSingleton<IUserIdProvider, CustomUserIdProvider>();
             // In production, the Angular files will be served from this directory

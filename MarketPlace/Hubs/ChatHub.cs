@@ -164,7 +164,13 @@ namespace MarketPlace.Hubs
 
             });
         }
-
+        public async Task getPursh()
+        {
+            await Clients.Caller.SendAsync("getPurchases", this._context.Orders.Include(x => x.Buyer).Where(x => x.Buyer.Id == Context.User.Identity.Name && x.isCompleted == false).ToList().Count);
+        }
+        public async Task getSales() {
+            await Clients.Caller.SendAsync("getSales", this._context.Orders.Include(x => x.Seller).Where(x => x.Seller.Id == Context.User.Identity.Name && x.isCompleted == false).ToList().Count);
+        }
         public override Task OnConnectedAsync()
         {
             Groups.AddToGroupAsync(this.Context.ConnectionId, "global");

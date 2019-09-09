@@ -36,7 +36,6 @@ export class ChatComponent implements OnInit {
         });
       })
       .catch(err => console.log('Error while establishing connection :('));
-    console.log(this._hubConnection.state);
     this._hubConnection.on('reciveAllMessages', (msgs: MessageModel[]) => {
       this.messages = msgs;
       const chatElement = document.querySelector('.chat');

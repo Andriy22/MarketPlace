@@ -31,10 +31,10 @@
           <span>Messages</span>
         </a>
         <a mat-button routerLink="/sales">
-          <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My sales</span>
+          <span matBadge="{{this.sales}}" matBadgeColor="accent" matBadgeOverlap="true">My sales</span>
         </a>
         <a mat-button routerLink="/purchases">
-          <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My purchases</span>
+          <span matBadge="{{this.pursh}}" matBadgeColor="accent" matBadgeOverlap="true">My purchases</span>
         </a>
         <a mat-button routerLink="/login">
           <span>Sign Out</span>
@@ -58,10 +58,10 @@
             <span>Messages</span>
           </a>
           <a mat-button routerLink="/sales">
-            <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My sales</span>
+            <span matBadge="{{this.sales}}" matBadgeColor="accent" matBadgeOverlap="true">My sales</span>
           </a>
           <a mat-button routerLink="/purchases">
-            <span matBadge="0" matBadgeColor="accent" matBadgeOverlap="false">My purchases</span>
+            <span matBadge="{{this.pursh}}" matBadgeColor="accent" matBadgeOverlap="true">My purchases</span>
           </a>
           <a mat-button routerLink="/login">
             <span>Sign Out</span>
