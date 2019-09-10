@@ -5,6 +5,9 @@ import { Element } from '@angular/compiler/src/render3/r3_ast';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 import { API } from './../../../../shared/config';
 import { BehaviorSubject } from 'rxjs';
+import { ErrorHandler } from 'src/app/shared/helpers/ErrorHandler';
+import { Router } from '@angular/router';
+import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-chat',
@@ -16,9 +19,10 @@ export class ChatComponent implements OnInit {
   id: BehaviorSubject<string>;
   messages: MessageModel[] = [];
   message =  '';
-  constructor(protected aS: AuthenticationService) {
+  constructor(protected aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
     this.id = new BehaviorSubject<string>('0');
     this.message = '';
+
    }
 
   ngOnInit() {
@@ -31,8 +35,8 @@ export class ChatComponent implements OnInit {
     this._hubConnection
       .start().then(() => {
         this.id.subscribe((id) => {
-          this._hubConnection.invoke('SwitchGroup', id);
-          this._hubConnection.invoke('SendAllMessages', id);
+          this._hubConnection.invoke('SwitchGroup', id).catch(this.Handler);
+          this._hubConnection.invoke('SendAllMessages', id).catch(this.Handler);
         });
       })
       .catch(err => console.log('Error while establishing connection :('));
@@ -58,8 +62,26 @@ export class ChatComponent implements OnInit {
     // this.id.subscribe((id) => {
     //   this._hubConnection.invoke('SendAllMessages', id);
     // });
-    this._hubConnection.invoke('sendMessage', this.message, this.id.value );
+    this._hubConnection.invoke('sendMessage', this.message, this.id.value ).catch(this.Handler);
     this.message = '';
   }
-
+  Handler(err) {
+      const error = err.message.toString();
+      if (error.indexOf('because user is unauthorized') !== -1) {
+        this.notify.create(
+          'error',
+          'Error',
+          'Token expired! We will redirect you to the login page.',
+        );
+        setTimeout(() => {
+          this.router.navigate(['/login']);
+        }, 2000);
+     } else {
+      this.notify.create(
+        'error',
+        'Error',
+        error,
+      );
+     }
+    }
 }

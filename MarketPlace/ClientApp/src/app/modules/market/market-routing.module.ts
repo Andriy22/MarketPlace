@@ -8,16 +8,17 @@ import { LotComponent } from './components/lots/lot/lot.component';
 import { SalesComponent } from './components/sales/sales.component';
 import { OrderComponent } from './components/order/order.component';
 import { PurchasesComponent } from './components/purchases/purchases.component';
+import { AuthGuard } from 'src/app/shared/guards/auth.guard';
 
 const routes: Routes = [
   {path: '', component: HomeComponent},
   {path: 'category/:id', component: CategoryComponent},
-  {path: 'lot/add/:id', component: AddLotComponent},
-  {path: 'lot/my-lots/:id', component: MyLotsComponent},
+  {path: 'lot/add/:id', component: AddLotComponent, canActivate: [AuthGuard]},
+  {path: 'lot/my-lots/:id', component: MyLotsComponent, canActivate: [AuthGuard]},
   {path: 'lot/:id', component: LotComponent},
-  {path: 'sales', component: SalesComponent},
-  {path: 'purchases', component: PurchasesComponent},
-  {path: 'order/:id', component: OrderComponent}
+  {path: 'sales', component: SalesComponent, canActivate: [AuthGuard]},
+  {path: 'purchases', component: PurchasesComponent, canActivate: [AuthGuard]},
+  {path: 'order/:id', component: OrderComponent, canActivate: [AuthGuard]}
 ];
 
 @NgModule({

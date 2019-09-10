@@ -45,7 +45,7 @@ export class OrderComponent implements OnInit {
                 this.notification.remove('ret');
               }
               createBasicNotification(template: TemplateRef<{}>): void {
-                this.notification.template(template);
+                this.notification.template(template, {nzDuration: 3000});
               }
 
 }

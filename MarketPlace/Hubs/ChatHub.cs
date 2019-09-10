@@ -26,7 +26,7 @@ namespace MarketPlace.Hubs
         [Authorize]
         public async Task Send(string message)
         {
-            await this.Clients.User(Context.User.Identity.Name).SendAsync("sendBalance", 999);
+            await this.Clients.User(Context.User.Identity.Name).SendAsync("sendBalance", this._context.Users.FirstOrDefault(x=>x.Id == Context.User.Identity.Name).Balance);
         }
 
 

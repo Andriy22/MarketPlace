@@ -28,12 +28,13 @@ export class HomeComponent implements OnInit {
       .start()
       .then(() => {
         console.log('Connection started!');
-        this._hubConnection.invoke('Send', '123');
+        this._hubConnection.invoke('Send', '123').catch((reason) => {
+          console.log(reason);
+        });
       })
       .catch(err => console.log('Error while establishing connection :('));
 
     this._hubConnection.on('sendBalance', (balance: number) => {
-      console.log(balance);
       this.balance = balance;
     });
 

@@ -48,13 +48,15 @@ import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material';
 import { AddBalanceComponent } from './components/add-balance/add-balance.component';
 import { ChatforuserComponent } from './components/chatforuser/chatforuser.component';
+import { ChangePasswordComponent } from './components/change-password/change-password.component';
 
 
 @NgModule({
   declarations: [
     HomeComponent,
     AddBalanceComponent,
-    ChatforuserComponent
+    ChatforuserComponent,
+    ChangePasswordComponent
   ],
   imports: [
     ProfileRoutingModule,

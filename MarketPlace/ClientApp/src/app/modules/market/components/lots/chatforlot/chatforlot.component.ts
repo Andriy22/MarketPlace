@@ -4,6 +4,8 @@ import { BehaviorSubject } from 'rxjs';
 import { MessageModel } from 'src/app/shared/models/MessageModel';
 import { AuthenticationService } from 'src/app/shared/services/authentication.service';
 import { API } from 'src/app/shared/config';
+import { Router } from '@angular/router';
+import { NzNotificationService } from 'ng-zorro-antd';
 
 @Component({
   selector: 'app-chatforlot',
@@ -16,7 +18,7 @@ export class ChatforlotComponent implements OnInit {
   username: BehaviorSubject<string>;
   messages: MessageModel[] = [];
   message =  '';
-  constructor(public aS: AuthenticationService) {
+  constructor(protected aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
     this.username = new BehaviorSubject<string>(null);
   }
 
@@ -31,7 +33,7 @@ export class ChatforlotComponent implements OnInit {
       .start().then(() => {
         this.username.subscribe((x) => {
           if (x != null) {
-            this._hubConnection.invoke('GetMessagesToMe', x);
+            this._hubConnection.invoke('GetMessagesToMe', x).catch(this.Handler);
           }
         });
       })
@@ -70,8 +72,27 @@ export class ChatforlotComponent implements OnInit {
     //   this._hubConnection.invoke('SendAllMessages', id);
     // });
     if ( this.username.value != null) {
-      this._hubConnection.invoke('SendMessageToUser', this.username.value, this.message);
+      this._hubConnection.invoke('SendMessageToUser', this.username.value, this.message).catch(this.Handler);
       this.message = '';
     }
+  }
+  Handler(err) {
+    const error = err.message.toString();
+    if (error.indexOf('because user is unauthorized') !== -1) {
+      this.notify.create(
+        'error',
+        'Error',
+        'Token expired! We will redirect you to the login page.',
+      );
+      setTimeout(() => {
+        this.router.navigate(['/login']);
+      }, 2000);
+   } else {
+    this.notify.create(
+      'error',
+      'Error',
+      error,
+    );
+   }
   }
 }

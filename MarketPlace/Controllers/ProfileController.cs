@@ -1,6 +1,7 @@
 ﻿using MarketPlace.Entities.DBEntities;
 using MarketPlace.Hubs;
 using MarketPlace.Models;
+using MarketPlace.Models.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -50,6 +51,22 @@ namespace MarketPlace.Controllers
             return Ok(balance);
         }
 
+        [HttpPost]
+        [Authorize]
+        public async System.Threading.Tasks.Task<IActionResult> changePassword([FromBody] ChangePasswordModel model)
+        {
+            var user = _userManager.FindByIdAsync(User.Identity.Name).Result;
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user, model.currentPassword, model.newPassword);
+                if (result.Succeeded)
+                {
+                    return Ok(new { msg = "Password changed!" });
+                }
 
+                return BadRequest(new { msg = "Password is invalid" });
+            }
+            return BadRequest(new { msg = "User not found" });
+        }
     }
 }

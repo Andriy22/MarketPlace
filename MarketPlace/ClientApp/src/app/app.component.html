@@ -30,12 +30,16 @@
         <a mat-button routerLink="/profile/messages">
           <span>Messages</span>
         </a>
-        <a mat-button routerLink="/sales">
-          <span matBadge="{{this.sales}}" matBadgeColor="accent" matBadgeOverlap="true">My sales</span>
-        </a>
-        <a mat-button routerLink="/purchases">
-          <span matBadge="{{this.pursh}}" matBadgeColor="accent" matBadgeOverlap="true">My purchases</span>
-        </a>
+        <nz-badge [nzCount]="this.sales">
+          <a mat-button routerLink="/sales">
+            <span>My sales</span>
+          </a>
+        </nz-badge>
+        <nz-badge [nzCount]="this.pursh">
+          <a mat-button routerLink="/purchases">
+            <span>My purchases</span>
+          </a>
+        </nz-badge>
         <a mat-button routerLink="/login">
           <span>Sign Out</span>
         </a>

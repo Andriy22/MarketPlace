@@ -25,7 +25,9 @@ public get getMyBalance() {
 addBalance(code: string) {
   return this.http.get(API + '/api/profile/addbalance?code=' + code);
 }
-
+changePassword(currentPassword: string, newPassword: string) {
+  return this.http.post(`${API}/api/profile/changePassword`, {currentPassword, newPassword});
+}
 // private getBalance() {
 //   this.http.get(API + '/api/profile/myBalance').subscribe((x: number) => {
 //     this.myBalance.next(x);

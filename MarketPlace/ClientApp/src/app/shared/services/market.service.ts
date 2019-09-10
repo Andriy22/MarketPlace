@@ -38,7 +38,7 @@ export class MarketService {
     this.spinner.show();
     this.http.get(API + '/api/market/ConfirmBuy?id=' + id).subscribe((x) => {
       this.spinner.hide();
-      this.router.navigate(['/sales']);
+      this.router.navigate(['/purchases']);
     }, (err) => {
       this.spinner.hide();
       this.notify.create(
