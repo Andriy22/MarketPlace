@@ -21,7 +21,7 @@
           After confirmation, we can not refund your money!
         </div>
         <span class="ant-notification-notice-btn">
-          <button nz-button nzType="primary" nzSize="small" (click)="this.ReturnMon(this.returnMoney)">
+          <button nz-button nzType="primary" nzSize="small" (click)="this.ReturnMon()">
             <span>Confirm</span>
           </button>
         </span>
@@ -44,9 +44,9 @@
 
   <h2>is Completed: {{this.data.isCompleted}}</h2>
   <div *ngIf="!this.data.isCompleted">
-      <button *ngIf="this.aS.currentUserValue.nickname === this.data?.saller" style="font-size: 1.3rem; margin: 1rem"
+      <button *ngIf="this.aS.currentUserValue?.nickname === this.data?.saller" style="font-size: 1.3rem; margin: 1rem"
       mat-raised-button color="primary" (click)="createBasicNotification(this.returnMoney)">Return money.</button>
-      <button *ngIf="this.aS.currentUserValue.nickname === this.data?.buyer" style="font-size: 1.3rem; margin: 1rem"
+      <button *ngIf="this.aS.currentUserValue?.nickname === this.data?.buyer" style="font-size: 1.3rem; margin: 1rem"
       mat-raised-button color="primary" (click)="createBasicNotification(this.confirmBuy)">Сonfirm execution.</button>
   </div>
 

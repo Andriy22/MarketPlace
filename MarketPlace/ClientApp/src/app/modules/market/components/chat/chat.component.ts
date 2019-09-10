@@ -19,7 +19,7 @@ export class ChatComponent implements OnInit {
   id: BehaviorSubject<string>;
   messages: MessageModel[] = [];
   message =  '';
-  constructor(protected aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
+  constructor(public aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
     this.id = new BehaviorSubject<string>('0');
     this.message = '';
 

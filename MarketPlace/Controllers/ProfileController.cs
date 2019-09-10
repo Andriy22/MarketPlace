@@ -30,6 +30,7 @@ namespace MarketPlace.Controllers
         public IActionResult addBalance(string code)
         {
             Thread.Sleep(2000);
+
             this._context.Users.FirstOrDefault(x => x.Id == User.Identity.Name).Balance += 500;
             try
             {

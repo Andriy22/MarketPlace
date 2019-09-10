@@ -18,7 +18,7 @@ export class OrderComponent implements OnInit {
   private Chat: ChatforlotComponent;
   constructor(private nzMessageService: NzMessageService, private Ms: MarketService, private spinner: NgxSpinnerService,
               private route: ActivatedRoute, private notification: NzNotificationService, private router: Router,
-              protected aS: AuthenticationService) { }
+              public aS: AuthenticationService) { }
 
               ngOnInit() {
                 this.spinner.show();
@@ -37,12 +37,12 @@ export class OrderComponent implements OnInit {
                 this.nzMessageService.info('click cancel');
               }
 
-              confirm(element): void {
+              confirm(): void {
                 this.Ms.Confirm(this.data.id);
               }
-              ReturnMon(element): void {
+              ReturnMon(): void {
                 this.Ms.ReturnMoney(this.data.id);
-                this.notification.remove('ret');
+
               }
               createBasicNotification(template: TemplateRef<{}>): void {
                 this.notification.template(template, {nzDuration: 3000});

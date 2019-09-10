@@ -18,7 +18,7 @@ export class ChatforlotComponent implements OnInit {
   username: BehaviorSubject<string>;
   messages: MessageModel[] = [];
   message =  '';
-  constructor(protected aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
+  constructor(public aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
     this.username = new BehaviorSubject<string>(null);
   }
 

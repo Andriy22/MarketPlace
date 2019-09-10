@@ -19,7 +19,7 @@ export class ChatforuserComponent implements OnInit {
   messages: MessageModel[] = [];
   message =  '';
   users: string[] = ['vasyan', 'petya'];
-  constructor(protected aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
+  constructor(public aS: AuthenticationService, private router: Router, private notify: NzNotificationService) {
     this.username = new BehaviorSubject<string>(null);
   }
 
