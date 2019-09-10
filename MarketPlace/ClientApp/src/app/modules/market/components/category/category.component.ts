@@ -31,7 +31,7 @@ export class CategoryComponent implements OnInit {
     this.spinner.show();
     // tslint:disable-next-line: radix
     this.Ms.GetLots(Number.parseInt(this.id)).subscribe((data: Lot[]) => {
-      this.dataSource = new MatTableDataSource(data);
+      this.dataSource = new MatTableDataSource(data.filter(x => x.isActive === true));
       this.dataSource.paginator = this.paginator;
       this.dataSource.sort = this.sort;
       this.spinner.hide();

@@ -12,5 +12,6 @@ namespace MarketPlace.Entities.DBEntities
         public bool isActive { get; set; }
         public virtual Category category { get; set; }
         public virtual User Owner { get; set; }
+        public bool isDeleted { get; set; }
     }
 }

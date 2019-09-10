@@ -26,7 +26,11 @@ export class OrderComponent implements OnInit {
                 this.Ms.getOrder(id).subscribe((x: Order) => {
                   this.spinner.hide();
                   this.data = x;
-                  this.Chat.SetUserName(x.saller);
+                  if (x.saller === this.aS.currentUserValue.nickname) {
+                    this.Chat.SetUserName(x.buyer);
+                  } else {
+                    this.Chat.SetUserName(x.saller);
+                  }
                   console.log(x);
                 }, (err) => {
                   this.spinner.hide();

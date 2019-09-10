@@ -3,4 +3,5 @@ export class Lot {
   Name: string;
   Description: string;
   Price: string;
+  isActive: boolean;
 }

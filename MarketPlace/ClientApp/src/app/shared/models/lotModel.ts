@@ -6,4 +6,5 @@ export class LotModel {
   userName: string;
   game: string;
   category: string;
+  isActive: boolean;
 }

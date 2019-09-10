@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "MarketPlace": {
+    "ClientApp": {
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {

@@ -11,6 +11,8 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
+
 namespace MarketPlace.Controllers
 {
     [Route("api/[controller]/[action]")]
@@ -53,22 +55,48 @@ namespace MarketPlace.Controllers
         {
             Thread.Sleep(2000);
             var lots = new HashSet<AllLots>();
-            foreach (var el in this._context.Lots.Include(x => x.category).Where(x => x.category.ID == id).ToList().OrderByDescending(x => x.lastUp))
+            foreach (var el in this._context.Lots.Include(x => x.category).Where(x => x.category.ID == id && x.isDeleted == false && x.isActive == true).ToList().OrderByDescending(x => x.lastUp))
             {
                 lots.Add(new AllLots() { Id = el.ID, Name = el.Name, Price = el.Price, isActive = Convert.ToBoolean(el.isActive) });
             }
             return Ok(lots);
         }
 
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> changeStatusLot(int id, bool status)
+        {
+            var lot = await this._context.Lots.Include(x => x.Owner).FirstAsync(x => x.ID == id);
+            if (lot == null)
+                return BadRequest(new { msg = "Lot not found" });
+            if (lot.Owner.Id != this.User.Identity.Name && this.User.IsInRole("Admin") == false)
+                return BadRequest(new { msg = "Access denied!" });
+            this._context.Lots.Include(x => x.Owner).FirstOrDefault(x => x.ID == lot.ID).isActive = status;
+            this._context.SaveChanges();
 
+            return Ok();
+        }
+        [HttpGet]
+        [Authorize]
+        public async Task<IActionResult> deleteLot(int id)
+        {
+           var lot =  await this._context.Lots.Include(x=>x.Owner).FirstAsync(x => x.ID == id);
+            if (lot == null)
+                return BadRequest(new { msg = "Lot not found" });
+            if (lot.Owner.Id != this.User.Identity.Name && this.User.IsInRole("Admin") == false)
+                return BadRequest(new { msg = "Access denied!" });
+            this._context.Lots.FirstOrDefault(x => x.ID == lot.ID).isDeleted = true;
+            this._context.SaveChanges();
 
+            return Ok();
+        }
         [HttpGet]
         [Authorize]
         public IActionResult getMyLots(int id)
         {
             Thread.Sleep(2000);
             var lots = new HashSet<AllLots>();
-            foreach (var el in this._context.Lots.Include(x => x.category).Include(x => x.Owner).Where(x => x.category.ID == id && x.Owner.Id == User.Identity.Name).ToList().OrderByDescending(x => x.lastUp))
+            foreach (var el in this._context.Lots.Include(x => x.category).Include(x => x.Owner).Where(x => x.category.ID == id && x.Owner.Id == User.Identity.Name && x.isDeleted == false).ToList().OrderByDescending(x => x.lastUp))
             {
                 lots.Add(new AllLots() { Id = el.ID, Name = el.Name, Price = el.Price });
             }
@@ -189,7 +217,7 @@ namespace MarketPlace.Controllers
                         name = el.Lot.Name
                     });
                 }
-                return Ok(result);
+                return Ok(result.OrderByDescending(x=>x.isCompleted));
             }
             return BadRequest(new { msg = "orders is null" });
         }
@@ -242,7 +270,7 @@ namespace MarketPlace.Controllers
                         name = el.Lot.Name
                     });
                 }
-                return Ok(result);
+                return Ok(result.OrderByDescending(x => x.isCompleted));
             }
             return BadRequest(new { msg = "orders is null" });
         }
@@ -272,8 +300,9 @@ namespace MarketPlace.Controllers
         [AllowAnonymous]
         public IActionResult getLot(int id)
         {
-            var lot = this._context.Lots.Include(x => x.category).Include(x => x.Owner).Include(x => x.category).FirstOrDefault(x => x.ID == id);
-
+            var lot = this._context.Lots.Include(x => x.category).Include(x => x.Owner).Include(x => x.category).FirstOrDefault(x => x.ID == id && x.isDeleted == false);
+            if (lot == null)
+                return BadRequest(new { msg = "Lot not found!" });
             LotModel data = new LotModel()
             {
                 id = lot.ID,
@@ -282,7 +311,8 @@ namespace MarketPlace.Controllers
                 Price = lot.Price,
                 Name = lot.Name,
                 UserName = lot.Owner.NickName,
-                Description = lot.Description
+                Description = lot.Description,
+                isActive = lot.isActive,
             };
             return Ok(data);
         }

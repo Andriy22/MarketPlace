@@ -63,6 +63,12 @@ export class MarketService {
       );
     });
   }
+  changeStatus(id: string, status: string) {
+    return this.http.get(API + '/api/market/changeStatusLot?id=' + id + '&status= ' + status);
+  }
+  deleteLot(id: string) {
+    return this.http.get(API + '/api/market/deleteLot?id=' + id);
+  }
   getOrder(id: string) {
     return this.http.get(API + '/api/market/getOrder?id=' + id);
   }
